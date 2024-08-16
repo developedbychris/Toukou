@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { initQuery, mangaQuery, animeQuery } from "./queries"
 const url = 'https://graphql.anilist.co'
+const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-80"
 
 function App() {
   const [animeRes, setAnimeRes] = useState(null)
@@ -10,11 +11,22 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("access_token"))
   const [userID, setUserID] = useState(null)
   // fuwn id: 5678223
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "REPEATING":
+        return "Rewatching"
+      case "CURRENT":
+        return "Currently Watching"
+      default:
+        return status
+    }
+  }
+  
 
   //*TOKEN USEEFFECT
   useEffect(()=>{
     if(!token){
-      const hash = window.location.hash.substring(1) // Remove the '#' from the beginning
+      const hash = window.location.hash.substring(1) // Removes the '#' from the beginning
       const params = new URLSearchParams(hash)
       const newToken = params.get('access_token')
       
@@ -78,13 +90,16 @@ function App() {
 
       fetch(url, animeOptions)
         .then(data => data.json())
-        .then(data => setAnimeRes(data.data.MediaListCollection.lists[0].entries))
+        .then(data => {
+          setAnimeRes(data.data.MediaListCollection.lists)
+          console.log(data.data.MediaListCollection.lists);
+        })
         .catch(e => setError(e.message))
       
       fetch(url, mangaOptions)
         .then(data => data.json())
         .then(data =>{
-          setMangaRes(data.data.MediaListCollection.lists[0].entries)
+          setMangaRes(data.data.MediaListCollection.lists)
         })
         .catch(e => setError(e.message))
     }
@@ -97,6 +112,7 @@ function App() {
       <header className="py-6 flex flex-col justify-center items-center overflow-x-visible bg-[#152232] ">
         <h1 className="text-5xl font-Title mb-2 text-neutral-200 select-none">TOU<span className="text-[#02a9ff]">KOU</span></h1>
         <h3 className="text-2xl font-Japanese font-black">投<span className="text-[#02a9ff]">稿</span></h3>
+        <h5></h5>
       </header>
       
       {/* <button className="mx-auto flex justify-items-center" onClick={()=> console.log("here's the response",res, "\n\nhere's the token:", token)}>log this</button> */}
@@ -128,25 +144,33 @@ function App() {
       {/* ANIME ENTRIES */}
       {animeRes?.length > 0 ? (
         <>
-        <div className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
-          <h1 className="text-4xl">ANIME</h1>
-          <h1 className="text-lg">Currently Watching</h1>
-        </div>
-
-        <div className="flex justify-between items-center w-10/12 mx-auto mb-20">
-          {animeRes.map((anime, i) => (
-            <div key={anime.id} className={`flex-1 p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-80 flex flex-col justify-center items-center ${i === animeRes.length -1 ? "" : "mr-6"}`}>
+        {
+        
+        animeRes.map((list)=>(
+        <>
+          <div className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
+            <h1 className="text-4xl">ANIME</h1>
+            <h1 className="text-lg">{list.isCustomList ? list.name : getStatusLabel(list.status)}</h1>
+          </div>
+          <div className="flex justify-between items-center w-10/12 mx-auto mb-20">
+          
+          {list.entries.map((anime, i) => (
+            <div key={anime.id} className={`flex-1 ${borderStyles} flex flex-col justify-center items-center ${i === animeRes.length -1 ? "" : "mr-6"}`}>
               <h1 className="text-center mb-2 font-Mono text-sm">{anime?.media?.title.english}</h1>
               <img className="m-auto h-56 shadow-md shadow-[#02a9ff] mb-2" src={anime.media.coverImage.large} alt={anime?.media?.title.english} />
               <h1 className="text-center mb-2 font-Mono text-sm">{anime.progress} / {anime.media.episodes}</h1>
             </div>
           ))}
-        </div>
+          </div>
+        </>
+        ))
+        }
+        
         </>
       ) : null}
 
        {/* Manga ENTRIES */}
-       {mangaRes?.length > 0 ? (
+       {/* {mangaRes?.length > 0 ? (
         <>
         <div className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
           <h1 className="text-4xl">Manga</h1>
@@ -155,7 +179,7 @@ function App() {
 
         <div className="flex justify-between items-center w-10/12 mx-auto">
           {mangaRes.map((manga, i) => (
-            <div key={manga.id} className={`flex-1 p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-80 flex flex-col justify-center items-center ${i === mangaRes.length -1 ? "" : "mr-6"}`}>
+            <div key={manga.id} className={`flex-1 ${borderStyles} flex flex-col justify-center items-center ${i === mangaRes.length -1 ? "" : "mr-6"}`}>
               <h1 className="text-center mb-2 font-Mono text-sm">{manga?.media?.title.english}</h1>
               <img className="m-auto h-56 shadow-md shadow-[#02a9ff] mb-2" src={manga.media.coverImage.large} alt={manga?.media?.title.english} />
               <h1 className="text-center mb-2 font-Mono text-sm">{manga.progress} / {manga.media.chapters}</h1>
@@ -163,7 +187,7 @@ function App() {
           ))}
         </div>
         </>
-      ) : null}
+      ) : null} */}
 
     </div>
   )

@@ -23,6 +23,9 @@ const animeQuery = `
   query($userId: Int!) {
     MediaListCollection(userId: $userId, status_in: [CURRENT, REPEATING], type: ANIME) {
       lists {
+        status  
+        name
+        isCustomList
         entries {
           id
           media {
@@ -52,6 +55,7 @@ const mangaQuery = `
   query($userId: Int!) {
     MediaListCollection(userId: $userId, status_in: [CURRENT, REPEATING], type: MANGA) {
       lists {
+        status
         entries {
           id
           media {
