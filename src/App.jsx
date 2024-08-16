@@ -1,53 +1,29 @@
 import { useEffect, useState } from 'react'
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query"
-
+import { initQuery, mangaQuery, animeQuery } from "./queries"
 const url = 'https://graphql.anilist.co'
-const initQuery = `
-  query{
-    Viewer{
-      id
-    }
-  }
-`
-const collectionQuery = `
-  query($userId: Int!) {
-    MediaListCollection(userId: $userId, status_in: [CURRENT, REPEATING], type: ANIME) {
-      lists {
-        entries {
-          id
-          media {
-            episodes
-            coverImage {
-              large
-              color
-            }
-            id
-            title {
-              romaji
-              english
-              native
-            }
-            type
-            format
-          }
-          status
-          progress
-        }
+
+function App() {
+  const [animeRes, setAnimeRes] = useState(null)
+  const [mangaRes, setMangaRes] = useState(null)
+  const [userData, setUserData] = useState(null) 
+  const [error, setError] = useState(null)
+  const [token, setToken] = useState(localStorage.getItem("access_token"))
+  const [userID, setUserID] = useState(null)
+  // fuwn id: 5678223
+
+  //*TOKEN USEEFFECT
+  useEffect(()=>{
+    if(!token){
+      const hash = window.location.hash.substring(1) // Remove the '#' from the beginning
+      const params = new URLSearchParams(hash)
+      const newToken = params.get('access_token')
+      
+      if(newToken){
+        setToken(newToken)
+        localStorage.setItem("access_token", newToken)
+        window.history.replaceState(null, null, window.location.pathname)
       }
     }
-}
-
-`
-function App() {
-  const [res, setRes] = useState(null)
-  const [error, setError] = useState(null)
-  const [token, setToken] = useState(null)
-  const [userID, setUserID] = useState(null)
-
-  useEffect(()=>{
-    const hash = window.location.hash.substring(1) // Remove the '#' from the beginning
-    const params = new URLSearchParams(hash)
-    const token = params.get('access_token')
     const options = {
       method: 'POST',
       headers: {
@@ -62,21 +38,20 @@ function App() {
     }
     // Runs when token is registered
     if (token) {
-      setToken(token)
       fetch(url, options)
         .then(data => data.json())
-        .then(data => setUserID(data.data.Viewer.id))
+        .then(data =>{
+          setUserID(data.data.Viewer.id)
+          setUserData(data.data.Viewer)
+        })
         .catch(e => setError(e.message))
-      window.history.replaceState(null, null, window.location.pathname)
     }
+  }, [token])
 
-    
-
-  }, [])
-
+  //* ANILIST USERID USEEFFECT
   useEffect(()=>{
     if(userID){
-      const collectionOptions = {
+      const animeOptions = {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -84,35 +59,112 @@ function App() {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          query: collectionQuery,
+          query: animeQuery,
+          variables: {userId: userID}
+        })
+      }
+      const mangaOptions = {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          query: mangaQuery,
           variables: {userId: userID}
         })
       }
 
-      fetch(url, collectionOptions)
+      fetch(url, animeOptions)
         .then(data => data.json())
-        .then(data => setRes(data.data.MediaListCollection.lists[0].entries))
+        .then(data => setAnimeRes(data.data.MediaListCollection.lists[0].entries))
+        .catch(e => setError(e.message))
+      
+      fetch(url, mangaOptions)
+        .then(data => data.json())
+        .then(data =>{
+          setMangaRes(data.data.MediaListCollection.lists[0].entries)
+        })
         .catch(e => setError(e.message))
     }
 
   },[userID])
 
   return (
-    <div>
-      {error && <p>{error}</p>}
-
-      <button onClick={()=> console.log("here's the response",res)}>log this</button>
-
-      {!token && <a className="" href='https://anilist.co/api/v2/oauth/authorize?client_id=20510&response_type=token'>
-        <button className="bg-black px-4 py-2 rounded-lg">Login With AniList</button>
-      </a>
-      }
-
-      {token && <p>Token is set</p>}
+    <div className="mx-auto flex flex-col">
       
-      {res && res?.map((anime)=>(
-        <h1 key={anime.id}>{anime?.media?.title.english}</h1>
-      ))}
+      <header className="py-6 flex flex-col justify-center items-center overflow-x-visible bg-[#152232] ">
+        <h1 className="text-5xl font-Title mb-2 text-neutral-200 select-none">TOU<span className="text-[#02a9ff]">KOU</span></h1>
+        <h3 className="text-2xl font-Japanese font-black">投<span className="text-[#02a9ff]">稿</span></h3>
+      </header>
+      
+      {/* <button className="mx-auto flex justify-items-center" onClick={()=> console.log("here's the response",res, "\n\nhere's the token:", token)}>log this</button> */}
+      
+      {!token && 
+      <div className="mt-20 flex flex-col justify-center items-center">
+        <h1 className="text-2xl mb-4 font-Mono select-none">Connect Your AniList Account</h1>
+        <a href='https://anilist.co/api/v2/oauth/authorize?client_id=20510&response_type=token'>
+          <button className="bg-[#02a9ff] px-4 py-2 rounded-lg font-Mono text-2xl ">Login With AniList</button>
+        </a>
+      </div>
+      }
+      {error && <h2 className="text-red-700 text-2xl flex justify-center my-10">{error}</h2>}
+
+      {/* USER INFO / WELCOME SECTION */}
+      {userData && (
+        <div className="py-6 w-full mx-auto flex flex-col items-center justify-center mb-20 select-none bg-slate-900 profileclip">
+          <h1 className="font-Mono font-bold text-2xl mb-5">Welcome {userData.name}!</h1>
+          <div className="flex">
+            <img src={userData.avatar.medium} alt={`${userData}'s avatar`} />
+            <div className="flex flex-col items-start justify-center">
+              <h1 className="font-Mono font-bold text-md mb-5">Episodes Watched: {userData.statistics.anime.episodesWatched}</h1>
+              <h1 className="font-Mono font-bold text-md">Chapters Read: {userData.statistics.manga.chaptersRead}</h1>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ANIME ENTRIES */}
+      {animeRes?.length > 0 ? (
+        <>
+        <div className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
+          <h1 className="text-4xl">ANIME</h1>
+          <h1 className="text-lg">Currently Watching</h1>
+        </div>
+
+        <div className="flex justify-between items-center w-10/12 mx-auto mb-20">
+          {animeRes.map((anime, i) => (
+            <div key={anime.id} className={`flex-1 p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-80 flex flex-col justify-center items-center ${i === animeRes.length -1 ? "" : "mr-6"}`}>
+              <h1 className="text-center mb-2 font-Mono text-sm">{anime?.media?.title.english}</h1>
+              <img className="m-auto h-56 shadow-md shadow-[#02a9ff] mb-2" src={anime.media.coverImage.large} alt={anime?.media?.title.english} />
+              <h1 className="text-center mb-2 font-Mono text-sm">{anime.progress} / {anime.media.episodes}</h1>
+            </div>
+          ))}
+        </div>
+        </>
+      ) : null}
+
+       {/* Manga ENTRIES */}
+       {mangaRes?.length > 0 ? (
+        <>
+        <div className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
+          <h1 className="text-4xl">Manga</h1>
+          <h1 className="text-lg">Currently Reading</h1>
+        </div>
+
+        <div className="flex justify-between items-center w-10/12 mx-auto">
+          {mangaRes.map((manga, i) => (
+            <div key={manga.id} className={`flex-1 p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-80 flex flex-col justify-center items-center ${i === mangaRes.length -1 ? "" : "mr-6"}`}>
+              <h1 className="text-center mb-2 font-Mono text-sm">{manga?.media?.title.english}</h1>
+              <img className="m-auto h-56 shadow-md shadow-[#02a9ff] mb-2" src={manga.media.coverImage.large} alt={manga?.media?.title.english} />
+              <h1 className="text-center mb-2 font-Mono text-sm">{manga.progress} / {manga.media.chapters}</h1>
+            </div>
+          ))}
+        </div>
+        </>
+      ) : null}
+
     </div>
   )
 }
