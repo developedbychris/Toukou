@@ -1,27 +1,47 @@
+import React from "react"
 import { useEffect, useState } from 'react'
 import { initQuery, mangaQuery, animeQuery } from "./queries"
+import loadingIcon from "./assets/loading.svg"
 const url = 'https://graphql.anilist.co'
-const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-80"
+const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-[19rem]"
 
 function App() {
   const [animeRes, setAnimeRes] = useState(null)
   const [mangaRes, setMangaRes] = useState(null)
-  const [userData, setUserData] = useState(null) 
+  const [userData, setUserData] = useState(null)
+  const [loading, setLoading] = useState(false) 
   const [error, setError] = useState(null)
   const [token, setToken] = useState(localStorage.getItem("access_token"))
-  const [userID, setUserID] = useState(null)
+  const [userID, setUserID] = useState(243474)
+
+  const handleTitles = (title) => title.length <= 50 ? title : `${title.slice(0,50)}...`
   // fuwn id: 5678223
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "REPEATING":
+  //igor id: 243474
+  //opi id: 5715171
+  const getStatusLabel = (status, type) => {
+    switch (true) {
+      case status === "REPEATING" && type === "anime":
         return "Rewatching"
-      case "CURRENT":
+      case status === "CURRENT" && type === "anime":
         return "Currently Watching"
+      case status === "REPEATING" && type === "manga":
+        return "Rereading"
+      case status === "CURRENT" && type === "manga":
+        return "Currently Reading"
       default:
         return status
     }
   }
-  
+  const getMediaStatuslabel = (status) =>{
+    switch(status){
+      case "RELEASING":
+        return "Ongoing"
+      case "NOT_YET_RELEASED":
+        return "Unreleased"
+      default:
+        return status
+    }
+  }
 
   //*TOKEN USEEFFECT
   useEffect(()=>{
@@ -50,6 +70,7 @@ function App() {
     }
     // Runs when token is registered
     if (token) {
+      setLoading(true)
       fetch(url, options)
         .then(data => data.json())
         .then(data =>{
@@ -57,6 +78,7 @@ function App() {
           setUserData(data.data.Viewer)
         })
         .catch(e => setError(e.message))
+        .finally(()=> setLoading(false))
     }
   }, [token])
 
@@ -88,34 +110,41 @@ function App() {
         })
       }
 
+      setLoading(true)
       fetch(url, animeOptions)
         .then(data => data.json())
         .then(data => {
           setAnimeRes(data.data.MediaListCollection.lists)
           console.log(data.data.MediaListCollection.lists);
         })
-        .catch(e => setError(e.message))
-      
+        .catch(e => {
+          setError(e.message)
+          console.error(e.message)
+        })
+        .finally(() => setLoading(false))
+
       fetch(url, mangaOptions)
         .then(data => data.json())
         .then(data =>{
           setMangaRes(data.data.MediaListCollection.lists)
         })
-        .catch(e => setError(e.message))
+        .catch(e => {
+          setError(e.message)
+          console.error(e.message)
+        })
+        .finally(() => setLoading(false))
     }
-
-  },[userID])
+  },[])
 
   return (
     <div className="mx-auto flex flex-col">
       
-      <header className="py-6 flex flex-col justify-center items-center overflow-x-visible bg-[#152232] ">
-        <h1 className="text-5xl font-Title mb-2 text-neutral-200 select-none">TOU<span className="text-[#02a9ff]">KOU</span></h1>
-        <h3 className="text-2xl font-Japanese font-black">投<span className="text-[#02a9ff]">稿</span></h3>
+      <header className="py-6 flex flex-col justify-center items-center overflow-x-visible bg-[#152232]">
+        <h1 className="text-5xl tracking-wide font-Title mb-1 text-neutral-200 select-none">TOU<span className="text-[#02a9ff]">KOU</span></h1>
+        <h3 className="text-xl tracking-widest font-Japanese font-black">投<span className="text-[#02a9ff]">稿</span></h3>
         <h5></h5>
       </header>
       
-      {/* <button className="mx-auto flex justify-items-center" onClick={()=> console.log("here's the response",res, "\n\nhere's the token:", token)}>log this</button> */}
       
       {!token && 
       <div className="mt-20 flex flex-col justify-center items-center">
@@ -125,10 +154,13 @@ function App() {
         </a>
       </div>
       }
-      {error && <h2 className="text-red-700 text-2xl flex justify-center my-10">{error}</h2>}
-
+      
       {/* USER INFO / WELCOME SECTION */}
-      {userData && (
+      {loading ? (
+        <div className="py-6 w-full mx-auto flex flex-col items-center justify-center mb-20 select-none bg-slate-900 profileclip">
+          <img src={loadingIcon} className="w-36 mx-auto"/>
+        </div>
+      ) : userData && (
         <div className="py-6 w-full mx-auto flex flex-col items-center justify-center mb-20 select-none bg-slate-900 profileclip">
           <h1 className="font-Mono font-bold text-2xl mb-5">Welcome {userData.name}!</h1>
           <div className="flex">
@@ -141,53 +173,73 @@ function App() {
         </div>
       )}
 
+      {error && <h2 className="text-red-700 text-2xl flex justify-center my-10">{error}</h2>}
+
       {/* ANIME ENTRIES */}
-      {animeRes?.length > 0 ? (
+      {loading ? (
+        <img src={loadingIcon} className="w-36 mx-auto"/>
+      ) : animeRes?.length > 0 ? (
         <>
         {
         
-        animeRes.map((list)=>(
-        <>
-          <div className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
+        animeRes.map((list, i)=>(
+        <React.Fragment key={list.name}>
+          <div  className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
             <h1 className="text-4xl">ANIME</h1>
-            <h1 className="text-lg">{list.isCustomList ? list.name : getStatusLabel(list.status)}</h1>
+            <h1 className="text-lg">{list.isCustomList ? list.name : getStatusLabel(list.status, "anime")}</h1>
           </div>
-          <div className="flex justify-between items-center w-10/12 mx-auto mb-20">
           
+          {/* GRID */}
+          <div className={`grid grid-cols-5 gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 place-content-center" : "grid-cols-5"}`}>
           {list.entries.map((anime, i) => (
-            <div key={anime.id} className={`flex-1 ${borderStyles} flex flex-col justify-center items-center ${i === animeRes.length -1 ? "" : "mr-6"}`}>
-              <h1 className="text-center mb-2 font-Mono text-sm">{anime?.media?.title.english}</h1>
-              <img className="m-auto h-56 shadow-md shadow-[#02a9ff] mb-2" src={anime.media.coverImage.large} alt={anime?.media?.title.english} />
-              <h1 className="text-center mb-2 font-Mono text-sm">{anime.progress} / {anime.media.episodes}</h1>
+            <div key={anime.id} className={` ${borderStyles} flex flex-col justify-center items-center`}>
+
+                <h1 className="text-center font-Mono text-sm mb-1">{anime.media.title.english ? handleTitles(anime.media.title.english) : handleTitles(anime.media.title.romaji)}</h1>
+                <img className="h-48 shadow-md shadow-[#02a9ff] mb-4" src={anime.media.coverImage.large} alt={anime?.media?.title.english} />
+                <h1 className="text-center mb-2 font-Mono text-sm">{anime.progress} / {anime.media.episodes}</h1>
+
             </div>
           ))}
           </div>
-        </>
+        </React.Fragment>
         ))
         }
         
         </>
       ) : null}
-
+      
        {/* Manga ENTRIES */}
-       {/* {mangaRes?.length > 0 ? (
+       {loading ? (
+        <img src={loadingIcon} className="w-36 mx-auto"/>
+      ) : mangaRes?.length > 0 ? (
         <>
-        <div className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
-          <h1 className="text-4xl">Manga</h1>
-          <h1 className="text-lg">Currently Reading</h1>
-        </div>
+        {
+        
+        mangaRes.map((list, i)=>(
+        <React.Fragment key={list.name}>
+          <div  className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none">
+            <h1 className="text-4xl">MANGA</h1>
+            <h1 className="text-lg">{list.isCustomList ? list.name : getStatusLabel(list.status, "manga")}</h1>
+          </div>
+          
+          {/* GRID */}
+          <div className={`grid grid-cols-5 gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 place-content-center" : "grid-cols-5"}`}>
+          {list.entries.map((manga, i) => (
+            <div key={manga.id} className={` ${borderStyles} flex flex-col justify-center items-center`}>
 
-        <div className="flex justify-between items-center w-10/12 mx-auto">
-          {mangaRes.map((manga, i) => (
-            <div key={manga.id} className={`flex-1 ${borderStyles} flex flex-col justify-center items-center ${i === mangaRes.length -1 ? "" : "mr-6"}`}>
-              <h1 className="text-center mb-2 font-Mono text-sm">{manga?.media?.title.english}</h1>
-              <img className="m-auto h-56 shadow-md shadow-[#02a9ff] mb-2" src={manga.media.coverImage.large} alt={manga?.media?.title.english} />
-              <h1 className="text-center mb-2 font-Mono text-sm">{manga.progress} / {manga.media.chapters}</h1>
+                <h1 className=" text-center font-Mono text-sm mb-1">{manga.media.title.english ? handleTitles(manga.media.title.english) : handleTitles(manga.media.title.romaji)}</h1>
+                <img className=" h-48 shadow-md shadow-[#02a9ff] mb-4" src={manga.media.coverImage.large} alt={manga?.media?.title.english} />
+                <h1 className="text-center mb-2 font-Mono text-sm">{manga.progress} / {manga.media.chapters ? manga.media.chapters : getMediaStatuslabel(manga.media.status)}</h1>
+
             </div>
           ))}
-        </div>
+          </div>
+        </React.Fragment>
+        ))
+        }
+        
         </>
-      ) : null} */}
+      ) : null}
 
     </div>
   )

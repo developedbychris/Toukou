@@ -30,6 +30,7 @@ const animeQuery = `
           id
           media {
             episodes
+            status
             coverImage {
               large
               color
@@ -56,10 +57,13 @@ const mangaQuery = `
     MediaListCollection(userId: $userId, status_in: [CURRENT, REPEATING], type: MANGA) {
       lists {
         status
+        name
+        isCustomList
         entries {
           id
           media {
             chapters
+            status
             coverImage {
               large
               color
