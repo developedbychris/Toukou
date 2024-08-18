@@ -12,6 +12,27 @@ body{
 }
 .profileclip{
   clip-path: polygon(0 0, 100% 0, 100% 75%, 85% 90%, 70% 100%, 30% 100%, 15% 90%, 0 75%);
+}
 
+.myBorder::after{
+  content:'';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-top: 10px;
+  background: linear-gradient(to right, transparent, #eeeeee 50%, transparent)
+}
 
+.modal-content {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #152232;
+}
+
+.no-scroll{
+  overflow: hidden;
 }

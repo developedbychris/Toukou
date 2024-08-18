@@ -35,6 +35,8 @@ const animeQuery = `
               large
               color
             }
+            isAdult
+            siteUrl
             id
             title {
               romaji
@@ -68,6 +70,8 @@ const mangaQuery = `
               large
               color
             }
+            isAdult
+            siteUrl
             id
             title {
               romaji
