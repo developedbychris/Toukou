@@ -30,7 +30,7 @@ function App() {
   }
   const handleModal = (anime) =>{
     setModalAnime(anime)
-    setModal(prevModal => !prevModal)
+    setModal(true)
   }
   
   const getStatusLabel = (status, type) => {
@@ -100,7 +100,7 @@ function App() {
     }
   }, [token])
 
-  //* ANILIST USERID USEEFFECT
+  // //* ANILIST USERID USEEFFECT
   useEffect(()=>{
     if(userID){
       const animeOptions = {
@@ -266,7 +266,7 @@ function App() {
         </>
       ) : null}
       
-      {modal && <Modal modal={modal} modalAnime={modalAnime}/>}
+      {modal && <Modal modalAnime={modalAnime} closeModal={()=> setModal(false)}/>}
     </div>
   )
 }
