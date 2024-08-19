@@ -30,6 +30,8 @@ const animeQuery = `
           id
           media {
             episodes
+            hashtag
+            description(asHtml: true)
             status
             coverImage {
               large
@@ -65,6 +67,8 @@ const mangaQuery = `
           id
           media {
             chapters
+            hashtag
+            description(asHtml: true)
             status
             coverImage {
               large

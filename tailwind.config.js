@@ -9,7 +9,8 @@ export default {
       fontFamily:{
         'Japanese':['Delta Gothic One', 'Arial'],
         'Title': ['Archivo Black', 'Times New Roman'],
-        'Mono': ['Noto Sans Mono', 'Arial']
+        'Mono': ['Noto Sans Mono', 'Arial'],
+        'Roboto': ['Roboto Condensed', 'Arial']
       }
     },
   },
