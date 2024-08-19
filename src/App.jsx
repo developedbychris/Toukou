@@ -17,7 +17,7 @@ function App() {
   const [loading, setLoading] = useState(false) 
   const [error, setError] = useState(null)
   const [token, setToken] = useState(localStorage.getItem("access_token"))
-  const [userID, setUserID] = useState(5678223)
+  const [userID, setUserID] = useState(null)
   const [blurAdult, setBlurAdult] = useState(false)
   const [modal, setModal] = useState(false)
   const [modalAnime, setModalAnime] = useState(null)
