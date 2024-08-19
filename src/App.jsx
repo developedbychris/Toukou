@@ -58,9 +58,6 @@ function App() {
     }
   }
 
-  useEffect(()=>{
-    console.log(modal);
-  },[modal])
   //*TOKEN USEEFFECT
   useEffect(()=>{
     if(!token){
@@ -213,7 +210,7 @@ function App() {
           </div>
           
           {/* GRID */}
-          <div className={`grid grid-cols-5 gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 place-content-center" : "grid-cols-5"}`}>
+          <div className={`grid gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 place-content-center" : "grid-cols-1 lg:grid-cols-5"}`}>
           {list.entries.map((anime, i) => (
             <div onClick={()=> handleModal(anime)} key={anime.id} className={`hover:cursor-pointer ${borderStyles} flex flex-col justify-center items-center hover:bg-blue-950 duration-200`}>
 
@@ -248,7 +245,7 @@ function App() {
           </div>
           
           {/* GRID */}
-          <div className={`grid grid-cols-5 gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 place-content-center" : "grid-cols-5"}`}>
+          <div className={`grid gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 place-content-center" : "grid-cols-1 lg:grid-cols-5"}`}>
           {list.entries.map((manga, i) => (
             <div onClick={()=> handleModal(manga)}  key={manga.id} className={`hover:cursor-pointer ${borderStyles} flex flex-col justify-center items-center hover:bg-blue-950 duration-200`}>
 
