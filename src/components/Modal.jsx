@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { handleModalDescription, createSanitizedHtml } from "../helpers";
+import useMediaQuery from "../hooks/useMediaQuery";
 
-const modalCSS = "w-full h-full top-0 left-0 fixed";
+const modalCSS = "w-full h-full top-0 left-0 fixed"
+
 
 const Modal = ({ modalAnime, closeModal }) => {
-
+  
 
   useEffect(()=>{
     document.body.classList.add('no-scroll')
@@ -16,7 +18,7 @@ const Modal = ({ modalAnime, closeModal }) => {
   if (!modalAnime) return null;
 
   return (
-    <div className={`${modalCSS} overflow-hidden`}>
+    <div className={`${modalCSS} overflow-x-hidden`}>
       {/* OVERLAY */}
       <div className={`${modalCSS} bg-[rgba(49,49,49,0.8)] overflow-hidden`} />
 
@@ -24,20 +26,21 @@ const Modal = ({ modalAnime, closeModal }) => {
         <div className="flex justify-end">
           <button onClick={closeModal} className="font-Title text-2xl text-gray-500 hover:text-[#02a9ff] duration-300">X</button>
         </div>
-        <div className="flex flex-col md:flex-row justify-start items-start">
+        <div className="flex flex-col md:flex-row justify-start items-center md:items-start">
         {/*   GET THE BANNER IMAGE TOO! */}
           {/* IMAGE DIV */}
-          <div className="h-full max-h-96 mr-2 p-0 flex flex-col items-center">
+          <div className="h-full max-h-96 mr-2 p-0 flex flex-col items-center mb-3 md:mb-0 ">
             <img className="rounded-lg" src={modalAnime.media.coverImage.large} alt={modalAnime.media.title.romaji} />
             
             <a className="mt-2" href={modalAnime.media.siteUrl} target="_blank">
               <img className="h-7 hover:scale-125 duration-200" src="https://anilist.co/img/icons/icon.svg" alt="AniList Logo" />
             </a>
           </div>
-          <div className="flex flex-col justify-start items-start w-full px-2">
+          <div className="flex flex-col justify-center items-center md:justify-start md:items-start w-full px-2">
             {/* Titles*/}
-            <h1 className="font-Mono text-start text-2xl">{modalAnime?.media?.title?.english ? modalAnime?.media?.title?.english : modalAnime?.media?.title?.romaji}</h1>
+            <h1 className="font-Mono text-2xl">{modalAnime?.media?.title?.english ? modalAnime?.media?.title?.english : modalAnime?.media?.title?.romaji}</h1>
             <h5 className="text-[0.6rem] mb-4">{modalAnime?.media?.title?.native}</h5>
+            
             <main className={` text-[${modalAnime.media.coverImage.color}] font-Roboto font-light`}>{createSanitizedHtml(handleModalDescription(modalAnime.media.description))}</main>
           </div>
         </div>
