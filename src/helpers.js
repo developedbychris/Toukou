@@ -20,11 +20,11 @@ const handleBlur = (isAdult, blurAdult) =>{
 const getStatusLabel = (status, type) => {
     switch (true) {
         case status === "REPEATING" && type === "anime":
-            return "Rewatching"
+            return "Re-watching"
         case status === "CURRENT" && type === "anime":
             return "Currently Watching"
         case status === "REPEATING" && type === "manga":
-            return "Rereading"
+            return "Re-reading"
         case status === "CURRENT" && type === "manga":
             return "Currently Reading"
         default:

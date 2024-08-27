@@ -1,15 +1,19 @@
 import React from "react"
 import { useEffect, useState } from 'react'
 import { initQuery, mangaQuery, animeQuery } from "./queries"
-import {handleTitles, handleBlur, getStatusLabel, getMediaStatuslabel} from "./helpers"
 import Modal from "./components/Modal"
 import loadingIcon from "./assets/loading.svg"
-import repeatIcon from "./assets/repeat.svg"
+import AnimeEntries from "./components/AnimeEntries"
+import MangaEntries from "./components/MangaEntries"
+import chika from "./assets/chika.gif"
 const url = 'https://graphql.anilist.co'
-const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-[19rem]"
+export const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-[19rem]"
 // fuwn id: 5678223
 //igor id: 243474
 //opi id: 5715171
+// jasper id: 6890331
+// cloud id: 436069
+// dude who only reads manga: 6185934
 function App() {
   const [animeRes, setAnimeRes] = useState(null)
   const [mangaRes, setMangaRes] = useState(null)
@@ -19,12 +23,9 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("access_token"))
   const [userID, setUserID] = useState(null)
   const [blurAdult, setBlurAdult] = useState(false)
-  const [modal, setModal] = useState(false)
+  const [isModalOpen, setModal] = useState(false)
   const [modalAnime, setModalAnime] = useState(null)
-  const handleModal = (anime) =>{
-    setModalAnime(anime)
-    setModal(true)
-}
+  
 
   //*TOKEN USEEFFECT
   useEffect(()=>{
@@ -97,8 +98,8 @@ function App() {
       fetch(url, animeOptions)
         .then(data => data.json())
         .then(data => {
-          setAnimeRes(data.data.MediaListCollection.lists)
-          console.log(data.data.MediaListCollection.lists);
+          setAnimeRes(data?.data?.MediaListCollection?.lists)
+          console.log(data?.data?.MediaListCollection?.lists);
         })
         .catch(e => {
           setError(e.message)
@@ -109,8 +110,8 @@ function App() {
       fetch(url, mangaOptions)
         .then(data => data.json())
         .then(data =>{
-          setMangaRes(data.data.MediaListCollection.lists)
-          console.log(data.data.MediaListCollection.lists)
+          setMangaRes(data?.data?.MediaListCollection?.lists)
+          console.log(data?.data?.MediaListCollection?.lists)
         })
         .catch(e => {
           setError(e.message)
@@ -123,21 +124,29 @@ function App() {
   return (
     <div className="mx-auto flex flex-col">
       
-      <header className="py-6 flex flex-col justify-center items-center overflow-x-visible bg-[#152232]">
+      <header className="py-5 flex flex-col justify-center items-center overflow-x-visible bg-[#152232]">
         <h1 className="text-5xl tracking-wide font-Title mb-1 text-neutral-200 select-none">TOU<span className="text-[#02a9ff]">KOU</span></h1>
-        <h3 className="text-xl tracking-widest font-Japanese font-black">投<span className="text-[#02a9ff]">稿</span></h3>
-        <h5></h5>
+        <h3 className="text-xl tracking-widest font-Japanese font-black mb-1">投<span className="text-[#02a9ff]">稿</span></h3>
+        <h5 className="text-xs tracking-widest font-Roboto font-extralight mb-1 select-none">A Client for AniList</h5>
       </header>
       
       
       {!token && 
-      <div className="mt-20 flex flex-col justify-center items-center">
-        <h1 className="text-2xl mb-4 font-Mono select-none">Connect Your AniList Account</h1>
-        <a href='https://anilist.co/api/v2/oauth/authorize?client_id=20510&response_type=token'>
-          <button className="bg-[#02a9ff] px-4 py-2 rounded-lg font-Mono text-2xl ">Login With AniList</button>
-        </a>
-      </div>
+        <div className="mt-10 w-10/12 md:w-9/12 xl:w-5/12 mx-auto flex flex-col justify-center items-center">
+          <h1 className="text-center text-4xl mb-2 font-Roboto font-black select-none text-neutral-200">Welcome to Toukou!</h1>
+          <img className="rounded-lg w-40 mb-4" src={chika} alt="gif of mayuri from steins;gate" />
+          <p className="leading-relaxed text-lg md:text-3xl mb-12 font-Roboto tracking-wide text-center text-neutral-200 select-none">
+            Connect your AniList account to Toukou, where you can easily track and update the anime and manga you're currently watching, reading, re-watching, or re-reading.
+            <br/><br/> Plus, share your latest updates directly to Twitter/X to let your friends know what you're up to!
+          </p>
+          <a href='https://anilist.co/api/v2/oauth/authorize?client_id=20510&response_type=token'>
+            <button className="bg-[#02a9ff] px-6 py-3 rounded-lg font-Mono text-lg md:text-2xl text-neutral-200 hover:bg-[#0288d1] duration-300">
+              Login With AniList
+            </button>
+          </a>
+        </div>
       }
+
       
       {/* USER INFO / WELCOME SECTION */}
       {loading ? (
@@ -153,8 +162,8 @@ function App() {
               <h1 className="font-Mono font-bold text-sm md:text-xl mb-2">Episodes Watched: {userData.statistics.anime.episodesWatched}</h1>
               <h1 className="font-Mono font-bold text-sm md:text-xl mb-2">Chapters Read: {userData.statistics.manga.chaptersRead}</h1>
               <div className="flex items-center p-0 m-0 ">
-                <h6 className="font-Mono text-xs md:text-lg mr-1">Blur 18+ Covers</h6>
-                <input className="h-2 md:h-3 outline-none" disabled={!animeRes && !mangaRes} type="checkbox" onChange={()=> setBlurAdult(!blurAdult) }/>
+                <h6 className="font-Roboto text-xs md:text-lg mr-1">Blur 18+ Covers</h6>
+                <input className="h-2 md:h-3 outline-none border-none" disabled={!animeRes && !mangaRes} type="checkbox" onChange={()=> setBlurAdult(!blurAdult) }/>
               </div>
             </div>
           </div>
@@ -163,86 +172,30 @@ function App() {
       {/* ERROR MESSAGE */}
       {error && <h2 className="text-red-700 text-2xl text-center my-10">{error}</h2>}
 
+      {/* BOTH ENTRIES ARE EMPTY */}
+      {token && animeRes?.length === 0 && mangaRes?.length === 0 &&(
+        <div className="w-10/12 md:w-7/12 mx-auto my-10">
+          <h1 className="text-center my-4 text-lg md:text-2xl font-Roboto font-light text-gray-400 italic">Toukou only tracks Anime/Manga you are CURRENTLY watching/reading or rewatching/rereading via AniList.*</h1>
+        </div>
+      )}
+
       {/* ANIME ENTRIES */}
       {loading ? (
         <img src={loadingIcon} className="w-36 mx-auto"/>
       ) : animeRes?.length > 0 ? (
-        <>
-        {
-        
-        animeRes.map((list, i)=>(
-        <React.Fragment key={list.name}>
-          <div  className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none relative myBorder">
-            <h1 className="text-4xl">ANIME</h1>
-            <h1 className="text-center text-lg font-semibold text-[#b7e7ff] underline underline-offset-3">
-              {list?.isCustomList ? list?.name : (
-                getStatusLabel(list?.status, "anime") === "REPEATING" ? (
-                  <>
-                    {getStatusLabel(list.status, "anime")}
-                    <img src={repeatIcon} alt="repeating icon" className="h-40 ml-2"/>
-                    
-                  </>
-                ) : getStatusLabel(list.status, "anime")
-                )}
-              </h1>
-
-          </div>
-          
-          {/* GRID */}
-          <div className={`grid gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 lg:grid-cols-3 xl:grid-cols-5" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"}`}>
-          {list.entries.map((anime, i) => (
-            <div onClick={()=> handleModal(anime)} key={anime.id} className={`hover:cursor-pointer ${borderStyles} flex flex-col justify-center items-center hover:bg-blue-950 duration-200`}>
-
-              <h1 className="text-center font-Mono text-sm mb-1">{anime.media.title.english ? handleTitles(anime.media.title.english) : handleTitles(anime.media.title.romaji)}</h1>
-              
-              <img  className={`h-48 shadow-md shadow-[#02a9ff] mb-4 ${anime.media.isAdult ? handleBlur(anime.media.isAdult, blurAdult) : ""}  rounded-md`} src={anime.media.coverImage.large} alt={anime?.media?.title.english} />
-              
-              <h1 className="text-center mb-2 font-Mono text-sm">{anime.progress} / {anime.media.episodes}</h1>
-
-            </div>
-          ))}
-          </div>
-        </React.Fragment>
-        ))
-        }
-        
-        </>
-      ) : null}
+        <AnimeEntries animeRes={animeRes} blurAdult={blurAdult}/>
+      ) : 
+        null
+      }
       
        {/* Manga ENTRIES */}
        {loading ? (
         <img src={loadingIcon} className="w-36 mx-auto"/>
       ) : mangaRes?.length > 0 ? (
-        <>
-        {
-        
-        mangaRes.map((list, i)=>(
-        <React.Fragment key={list.name}>
-          <div  className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none relative myBorder">
-            <h1 className="text-4xl">MANGA</h1>
-            <h1 className="text-lg text-[#b7e7ff] underline underline-offset-3">{list.isCustomList ? list.name : getStatusLabel(list.status, "manga")}</h1>
-          </div>
-          
-          {/* GRID */}
-          <div className={`grid gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 lg:grid-cols-3 xl:grid-cols-5" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"}`}>
-          {list.entries.map((manga, i) => (
-            <div onClick={()=> handleModal(manga)}  key={manga.id} className={`hover:cursor-pointer ${borderStyles} flex flex-col justify-center items-center hover:bg-blue-950 duration-200`}>
-
-              <h1 className=" text-center font-Mono text-sm mb-1">{manga.media.title.english ? handleTitles(manga.media.title.english) : handleTitles(manga.media.title.romaji)}</h1>
-              <img className={`h-48 shadow-md shadow-[#02a9ff] mb-4 ${manga.media.isAdult ? handleBlur(manga.media.isAdult, blurAdult) : ""} rounded-md`} src={manga.media.coverImage.large} alt={manga?.media?.title.english} />
-              <h1 className="text-center mb-2 font-Mono text-sm">{manga.progress} / {manga.media.chapters ? manga.media.chapters : getMediaStatuslabel(manga.media.status)}</h1>
-
-            </div>
-          ))}
-          </div>
-        </React.Fragment>
-        ))
-        }
-        
-        </>
+        <MangaEntries mangaRes={mangaRes} blurAdult={blurAdult}/>
       ) : null}
       
-      {modal && <Modal modalAnime={modalAnime} closeModal={()=> setModal(false)}/>}
+      
     </div>
   )
 }
