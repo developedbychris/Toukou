@@ -53,6 +53,7 @@ body::-webkit-scrollbar-track {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #02a9ff #1a2b4a;
+  z-index: 50;
 }
 
 /* Webkit-based browsers (Chrome, Safari) */

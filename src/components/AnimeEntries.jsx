@@ -17,7 +17,7 @@ const AnimeEntries = ({animeRes, blurAdult}) => {
             {
             animeRes.map((list, i)=>(
             <React.Fragment key={list.name}>
-            <div  className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none relative myBorder">
+            <div  className="-z-50 w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none relative myBorder">
                 <h1 className="text-4xl">ANIME</h1>
                 <h1 className="text-center text-lg font-semibold text-[#b7e7ff]">
                 {list?.isCustomList ? list?.name : (

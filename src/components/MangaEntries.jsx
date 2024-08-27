@@ -17,7 +17,7 @@ const MangaEntries = ({mangaRes, blurAdult}) => {
             {
             mangaRes.map((list, i)=>(
             <React.Fragment key={list.name}>
-            <div  className="w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none relative myBorder">
+            <div  className="-z-50 w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none relative myBorder">
                 <h1 className="text-4xl">MANGA</h1>
                 <h1 className="text-lg text-[#b7e7ff]">{list.isCustomList ? list.name : getStatusLabel(list.status, "manga")}</h1>
             </div>
