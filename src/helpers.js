@@ -42,4 +42,29 @@ const getMediaStatuslabel = (status) =>{
     }
 }
 
-export {handleTitles, handleModalDescription, createSanitizedHtml, handleBlur, getStatusLabel, getMediaStatuslabel}
+const getFormatLabel = (format) =>{
+    switch (format){
+        case "TV":
+            return "Episode"
+        case "TV_SHORT":
+            return "Episode"
+        case "MOVIE":
+            return "Episode"
+        case "SPECIAL":
+            return "Episode"
+        case "OVA":
+            return "Episode"
+        case "ONA":
+            return "Episode"
+        case "MUSIC":
+            return "Episode"
+        case "MANGA":
+            return "Chapter"
+        case "NOVEL":
+            return "Chapter"
+        case "ONE_SHOT":
+            return "Chapter"
+    }
+}
+
+export {handleTitles, handleModalDescription, createSanitizedHtml, handleBlur, getStatusLabel, getMediaStatuslabel, getFormatLabel}

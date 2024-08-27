@@ -11,6 +11,11 @@ export default {
         'Title': ['Archivo Black', 'Times New Roman'],
         'Mono': ['Noto Sans Mono', 'Arial'],
         'Roboto': ['Roboto Condensed', 'Arial']
+      },
+      colors:{
+        'AniListBlue': "#02a9ff",
+        'AniListDarkBlue': "#0c1522",
+        'HeaderBG': "#152232"
       }
     },
   },

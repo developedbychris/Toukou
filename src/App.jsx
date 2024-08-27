@@ -24,9 +24,15 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("access_token"))
   const [userID, setUserID] = useState(null)
   const [blurAdult, setBlurAdult] = useState(false)
-  const [isModalOpen, setModal] = useState(false)
-  const [modalAnime, setModalAnime] = useState(null)
-  
+
+  const logOut = () =>{
+    localStorage.removeItem('access_token')
+    setToken(null)
+    setUserData(null)
+    setUserID(null)
+    setAnimeRes(null)
+    setMangaRes(null)
+  }
 
   //*TOKEN USEEFFECT
   useEffect(()=>{
@@ -129,7 +135,7 @@ function App() {
       
       {!token && 
         <div className="mt-10 w-10/12 md:w-9/12 xl:w-5/12 mx-auto flex flex-col justify-center items-center">
-          <h1 className="text-center text-4xl mb-2 font-Roboto font-black select-none text-neutral-200">Welcome to Toukou!</h1>
+          <h1 className="text-center text-4xl md:text-6xl mb-2 font-Roboto font-black select-none text-neutral-200">Welcome to Toukou!</h1>
           <img className="rounded-lg w-40 mb-4" src={chika} alt="gif of mayuri from steins;gate" />
           <p className="leading-relaxed text-lg md:text-3xl mb-12 font-Roboto tracking-wide text-center text-neutral-200 select-none">
             Connect your AniList account to Toukou, where you can easily track and update the anime and manga you're currently watching, reading, re-watching, or re-reading.
@@ -151,7 +157,10 @@ function App() {
         </div>
       ) : userData && (
         <div className="py-6 w-full mx-auto flex flex-col items-center justify-center mb-20 select-none bg-slate-900 profileclip">
-          <h1 className="font-Mono font-bold text-2xl mb-5">Welcome {userData.name}!</h1>
+          <h1 className="font-Mono font-bold text-2xl mb-2">Welcome {userData.name}!</h1>
+          <button onClick={logOut} className="bg-[#0288d1] mb-2 p-2 rounded-md font-Mono text-xs md:text-sm text-neutral-200 hover:bg-gray-400 duration-300">
+            Log Out
+          </button>
           <div className="flex w-auto">
             <img className="h-16 md:h-20 lg:h-36 w-auto" src={userData.avatar.large} alt={`${userData}'s avatar`} />
             <div className="flex flex-col items-start justify-center">

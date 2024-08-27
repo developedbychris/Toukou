@@ -1,0 +1,15 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px; /* or whatever is needed to fit your content */
+  }
+}
+
+.accordion-content {
+  animation: fadeIn 0.5s ease-out;
+}
+

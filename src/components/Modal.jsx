@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { handleModalDescription, createSanitizedHtml } from "../helpers";
+import { handleModalDescription, createSanitizedHtml, getFormatLabel } from "../helpers";
 import useMediaQuery from "../hooks/useMediaQuery";
-
+import Accordion from "./Accordion/Accordion";
 const modalCSS = "w-full h-full top-0 left-0 fixed"
 
 
 const Modal = ({ modalAnime, closeModal }) => {
   const isMobile = useMediaQuery('(max-width: 640px)')
-
+  const [hovered, setHovered] = useState(false)
   useEffect(()=>{
     document.body.classList.add('no-scroll')
     return () => {
@@ -37,10 +37,21 @@ const Modal = ({ modalAnime, closeModal }) => {
           </div>
           <div className="flex flex-col justify-center items-center md:justify-start md:items-start w-full px-2">
             {/* Titles*/}
-            <h1 className="font-Mono text-2xl">{modalAnime?.media?.title?.english ? modalAnime?.media?.title?.english : modalAnime?.media?.title?.romaji}</h1>
-            <h5 className="text-[0.6rem] mb-4">{modalAnime?.media?.title?.native}</h5>
-            
-            <main className={` text-[${modalAnime.media.coverImage.color}] font-Roboto font-light`}>{createSanitizedHtml(handleModalDescription(modalAnime.media.description))}</main>
+            <h1 className="font-Mono text-2xl text-neutral-200 text-center mb-1">{modalAnime?.media?.title?.english ? modalAnime?.media?.title?.english : modalAnime?.media?.title?.romaji}</h1>
+            <h5 className="font-Japanese text-sm font-light mb-4 tracking-wide text-center" style={{color: modalAnime.media.coverImage.color}}>{modalAnime?.media?.title?.native}</h5>
+            {/* PROGRESS COUNT */}
+            <div className="flex items-center">
+              <h4 className="font-Mono mr-2" >{getFormatLabel(modalAnime.media.format)} Count:</h4>
+              <input type="number" value={modalAnime.progress}  className="text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalAnime.media.coverImage.color}}/>
+              <button 
+                className="font-Mono bg-AniListDarkBlue px-2 rounded-md duration-200" 
+                onMouseEnter={()=> setHovered(true)} 
+                onMouseLeave={()=> setHovered(false)}
+                style={{backgroundColor: hovered ? modalAnime.media.coverImage.color : "initial"}}>
+                +
+              </button>
+            </div>
+            <Accordion modalMediaColor={modalAnime.media.coverImage.color} title="Synopsis" content={createSanitizedHtml(handleModalDescription(modalAnime.media.description))}/>
           </div>
         </div>
       </div>

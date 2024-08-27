@@ -13,20 +13,6 @@ body{
   scrollbar-color: #02a9ff #1a2b4a; /* thumb color | track color */
 }
 
-/* Webkit-based browsers (Chrome, Safari) */
-body::-webkit-scrollbar {
-  width: 10px;
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: #02a9ff; /* scrollbar thumb color */
-  border-radius: 10px; /* make it rounder */
-}
-
-body::-webkit-scrollbar-track {
-  background-color: #1a2b4a; /* scrollbar track color */
-  border-radius: 10px; /* match the thumb's border-radius */
-}
 
 .profileclip{
   clip-path: polygon(0 0, 100% 0, 100% 75%, 85% 90%, 70% 100%, 30% 100%, 15% 90%, 0 75%);
@@ -73,4 +59,16 @@ body::-webkit-scrollbar-track {
 
 .no-scroll{
   overflow: hidden;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
