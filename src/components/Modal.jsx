@@ -5,7 +5,7 @@ import Accordion from "./Accordion/Accordion";
 const modalCSS = "w-full h-full top-0 left-0 fixed"
 
 
-const Modal = ({ modalAnime, closeModal }) => {
+const Modal = ({ modalMedia, closeModal }) => {
   const isMobile = useMediaQuery('(max-width: 640px)')
   const [hovered, setHovered] = useState(false)
   useEffect(()=>{
@@ -15,7 +15,7 @@ const Modal = ({ modalAnime, closeModal }) => {
     }
   },[])
 
-  if (!modalAnime) return null;
+  if (!modalMedia) return null;
 
   return (
     <div className={`${modalCSS} overflow-x-hidden`}>
@@ -28,30 +28,30 @@ const Modal = ({ modalAnime, closeModal }) => {
         </div>
         <div className="flex flex-col md:flex-row justify-start items-center md:items-start">
           {/* IMAGE DIV */}
-          <div className="h-full max-h-96 mr-2 p-0 flex flex-col items-center mb-3 md:mb-0 ">
-            <img className="rounded-lg" src={modalAnime.media.coverImage.large} alt={modalAnime.media.title.romaji} />
+          <div className="max-h-96 mr-2 p-0 flex flex-col items-center mb-3 md:mb-0 ">
+            <img className="w-40 md:w-auto rounded-lg" src={modalMedia.media.coverImage.large} alt={modalMedia.media.title.romaji} />
             
-            <a className="mt-2" href={modalAnime.media.siteUrl} target="_blank">
+            <a className="mt-2" href={modalMedia.media.siteUrl} target="_blank">
               <img className="h-7 hover:scale-125 duration-200" src="https://anilist.co/img/icons/icon.svg" alt="AniList Logo" />
             </a>
           </div>
           <div className="flex flex-col justify-center items-center md:justify-start md:items-start w-full px-2">
             {/* Titles*/}
-            <h1 className="font-Mono text-2xl text-neutral-200 text-center mb-1">{modalAnime?.media?.title?.english ? modalAnime?.media?.title?.english : modalAnime?.media?.title?.romaji}</h1>
-            <h5 className="font-Japanese text-sm font-light mb-4 tracking-wide text-center" style={{color: modalAnime.media.coverImage.color}}>{modalAnime?.media?.title?.native}</h5>
+            <h1 className="font-Mono text-2xl text-neutral-200 text-center mb-1">{modalMedia?.media?.title?.english ? modalMedia?.media?.title?.english : modalMedia?.media?.title?.romaji}</h1>
+            <h5 className="font-Japanese text-sm font-light mb-4 tracking-wide text-center" style={{color: modalMedia.media.coverImage.color}}>{modalMedia?.media?.title?.native}</h5>
             {/* PROGRESS COUNT */}
             <div className="flex items-center">
-              <h4 className="font-Mono mr-2" >{getFormatLabel(modalAnime.media.format)} Count:</h4>
-              <input type="number" value={modalAnime.progress}  className="text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalAnime.media.coverImage.color}}/>
+              <h4 className="font-Mono mr-2" >{getFormatLabel(modalMedia.media.format)} Count:</h4>
+              <input type="number" value={modalMedia.progress}  className="text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalMedia.media.coverImage.color}}/>
               <button 
                 className="font-Mono bg-AniListDarkBlue px-2 rounded-md duration-200" 
                 onMouseEnter={()=> setHovered(true)} 
                 onMouseLeave={()=> setHovered(false)}
-                style={{backgroundColor: hovered ? modalAnime.media.coverImage.color : "initial"}}>
+                style={{backgroundColor: hovered ? modalMedia.media.coverImage.color : "initial"}}>
                 +
               </button>
             </div>
-            <Accordion modalMediaColor={modalAnime.media.coverImage.color} title="Synopsis" content={createSanitizedHtml(handleModalDescription(modalAnime.media.description))}/>
+            <Accordion modalMediaColor={modalMedia.media.coverImage.color} title="Synopsis" content={createSanitizedHtml(handleModalDescription(modalMedia.media.description))}/>
           </div>
         </div>
       </div>

@@ -15,7 +15,8 @@ export default {
       colors:{
         'AniListBlue': "#02a9ff",
         'AniListDarkBlue': "#0c1522",
-        'HeaderBG': "#152232"
+        'HeaderBG': "#152232",
+        'TwitterBlue': "#26a7de",
       }
     },
   },

@@ -6,9 +6,9 @@ import { borderStyles } from "../App"
 
 const AnimeEntries = ({animeRes, blurAdult}) => {
     const [isModalOpen, setModal] = useState(false)
-    const [modalAnime, setModalAnime] = useState(null)
+    const [modalMedia, setModalMedia] = useState(null)
     const handleModal = (anime) =>{
-        setModalAnime(anime)
+        setModalMedia(anime)
         setModal(true)
     }
 
@@ -49,7 +49,7 @@ const AnimeEntries = ({animeRes, blurAdult}) => {
             </React.Fragment>
             ))
             }
-            {isModalOpen && <Modal modalAnime={modalAnime} closeModal={()=> setModal(false)}/>}
+            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)}/>}
         </>
     )
 }

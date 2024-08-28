@@ -6,9 +6,9 @@ import { borderStyles } from "../App"
 
 const MangaEntries = ({mangaRes, blurAdult}) => {
     const [isModalOpen, setModal] = useState(false)
-    const [modalAnime, setModalAnime] = useState(null)
+    const [modalMedia, setModalMedia] = useState(null)
     const handleModal = (anime) =>{
-        setModalAnime(anime)
+        setModalMedia(anime)
         setModal(true)
     }
     
@@ -36,7 +36,7 @@ const MangaEntries = ({mangaRes, blurAdult}) => {
             ))
             }
 
-            {isModalOpen && <Modal modalAnime={modalAnime} closeModal={()=> setModal(false)}/>}
+            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)}/>}
         </>
     )
 }
