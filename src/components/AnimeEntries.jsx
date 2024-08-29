@@ -4,7 +4,7 @@ import { getStatusLabel, handleTitles} from "../helpers"
 import Modal from "./Modal"
 import { borderStyles } from "../App"
 
-const AnimeEntries = ({animeRes, blurAdult}) => {
+const AnimeEntries = ({animeRes, blurAdult, token, fetchUpdates}) => {
     const [isModalOpen, setModal] = useState(false)
     const [modalMedia, setModalMedia] = useState(null)
     const handleModal = (anime) =>{
@@ -49,7 +49,7 @@ const AnimeEntries = ({animeRes, blurAdult}) => {
             </React.Fragment>
             ))
             }
-            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)}/>}
+            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)} token={token} fetchUpdates={fetchUpdates}/>}
         </>
     )
 }

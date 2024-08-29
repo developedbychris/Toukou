@@ -91,6 +91,14 @@ const mangaQuery = `
       }
     }
 }
-
 `
-export { initQuery, animeQuery, mangaQuery }
+
+const mediaProgressMutation = `
+  mutation SaveMediaListEntry($mediaId: Int!, $progress: Int!, $status: MediaListStatus) {
+    SaveMediaListEntry(mediaId: $mediaId, progress: $progress, status: $status) {
+      progress
+    	status
+    }
+  }
+`
+export { initQuery, animeQuery, mangaQuery, mediaProgressMutation }

@@ -10,7 +10,7 @@ import MangaEntries from "./components/MangaEntries"
 import WelcomeSection from "./components/WelcomeSection"
 import UserButtons from "./components/UserButtons"
 
-const url = 'https://graphql.anilist.co'
+export const url = 'https://graphql.anilist.co'
 export const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-[19rem]"
 // fuwn id: 5678223
 //igor id: 243474
@@ -251,7 +251,7 @@ function App() {
       {loading ? (
         <img src={loadingIcon} className="w-36 mx-auto"/>
       ) : animeRes?.length > 0 ? (
-        <AnimeEntries animeRes={animeRes} blurAdult={blurAdult}/>
+        <AnimeEntries animeRes={animeRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>
       ) : 
         null
       }
@@ -260,7 +260,7 @@ function App() {
        {loading ? (
         <img src={loadingIcon} className="w-36 mx-auto"/>
       ) : mangaRes?.length > 0 ? (
-        <MangaEntries mangaRes={mangaRes} blurAdult={blurAdult}/>
+        <MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>
       ) : null}
       
       <Footer/>

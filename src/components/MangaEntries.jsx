@@ -4,7 +4,7 @@ import { getStatusLabel, handleTitles, getMediaStatuslabel} from "../helpers"
 import Modal from "./Modal"
 import { borderStyles } from "../App"
 
-const MangaEntries = ({mangaRes, blurAdult}) => {
+const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates}) => {
     const [isModalOpen, setModal] = useState(false)
     const [modalMedia, setModalMedia] = useState(null)
     const handleModal = (anime) =>{
@@ -36,7 +36,7 @@ const MangaEntries = ({mangaRes, blurAdult}) => {
             ))
             }
 
-            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)}/>}
+            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)} token={token} fetchUpdates={fetchUpdates}/>}
         </>
     )
 }

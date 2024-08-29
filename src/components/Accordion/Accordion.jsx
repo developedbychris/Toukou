@@ -7,8 +7,8 @@ const Accordion = ({ title, content, modalMediaColor, faq }) => {
 
     return (
         <div className={`w-full ${faq ? "mb-3" : ""}`}>
-            <div className="flex items-center justify-between cursor-pointer py-2 border-b border-AniListBlue" style={{borderColor: modalMediaColor || "#02a9ff"}} onClick={toggleAccordion}>
-                <h2 className="font-Mono text-lg text-neutral-200">{title}</h2>
+            <div className="flex items-center justify-between cursor-pointer py-2 border-b" style={{borderColor: modalMediaColor || "#02a9ff"}} onClick={toggleAccordion}>
+                <h2 className="font-Mono text-lg text-neutral-200 select-none">{title}</h2>
                 <svg 
                 className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'transform rotate-180' : ''}`} 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -23,7 +23,7 @@ const Accordion = ({ title, content, modalMediaColor, faq }) => {
                 </svg>
             </div>
         {isOpen && (
-          <div className={`accordion-content py-2 ${faq? "text-neutral-300" : "text-neutral-200"} font-Roboto font-light transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 max-h-screen' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+          <div className={` mt-1 accordion-content ${isOpen ? 'open' : ''} ${faq ? "text-neutral-300" : "text-neutral-200"} font-Roboto font-light`}>
             {content}
           </div>
         )}
