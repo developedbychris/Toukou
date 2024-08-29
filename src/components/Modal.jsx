@@ -111,7 +111,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
       {/* OVERLAY */}
       <div className={`${modalCSS} bg-[rgba(49,49,49,0.8)] overflow-hidden`} onClick={isMobile ? closeModal : null}/>
       {/* MODAL CONTENT */}
-      <div className="modal-content max-h-[75vh] md:max-h-[55vh] xl:max-h-[75vh] px-10 py-5  w-11/12 md:w-11/12 lg:w-10/12 xl:w-6/12 rounded-xl mx-auto mt-10 border-b-2 border-l-2" style={{borderColor: modalMedia.media.coverImage.color, scrollbarColor: `${modalMedia.media.coverImage.color} #1a2b4a`}}>
+      <div className="modal-content max-h-[75vh] md:max-h-[55vh] 2xl:max-h-[75vh] px-10 py-5  w-11/12 md:w-11/12 lg:w-10/12 xl:w-6/12 rounded-xl mx-auto mt-10 border-b-2 border-l-2" style={{borderColor: modalMedia.media.coverImage.color, scrollbarColor: `${modalMedia.media.coverImage.color} #1a2b4a`}}>
         <div className="flex justify-end">
           <RiCloseCircleFill className={`close-btn scale-150 duration-200 hover:cursor-pointer`} style={{'--default-color': modalMedia.media.coverImage.color}} onClick={closeModal}/>
         </div>
@@ -143,10 +143,10 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
             </div>
             {
               progressChanged && (
-                <div className="mt-4 flex justify-center">
+                <div className="mt-4 flex flex-col md:flex-row justify-center font-Japanese">
                   <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`} target="_blank" onClick={handleMediaUpdate}>
                     <button 
-                      className="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded-md duration-300 mr-2"
+                      className="bg-green-600 hover:bg-green-700 mb-2 md:mb-0 text-white px-3 py-2 rounded-md duration-300 mr-2"
                     >
                       Commit Changes and Tweet
                     </button>

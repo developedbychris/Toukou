@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        'Japanese':['Delta Gothic One', 'Arial'],
+        'Japanese':['Sawarabi Gothic', 'Arial'],
         'Title': ['Archivo Black', 'Times New Roman'],
         'Mono': ['Noto Sans Mono', 'Arial'],
         'Roboto': ['Roboto Condensed', 'Arial']
