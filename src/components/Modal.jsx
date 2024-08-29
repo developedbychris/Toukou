@@ -10,6 +10,9 @@ const modalCSS = "w-full h-full top-0 left-0 fixed"
 const Modal = ({ modalMedia, closeModal }) => {
   const isMobile = useMediaQuery('(max-width: 640px)')
   const [hovered, setHovered] = useState(false)
+  const [originalProgress, setOriginalProgress] = useState(modalMedia.progress)
+  const [newProgress, setNewProgress] = useState(null)
+  
   useEffect(()=>{
     document.body.classList.add('no-scroll')
     return () => {
@@ -44,11 +47,12 @@ const Modal = ({ modalMedia, closeModal }) => {
             {/* PROGRESS COUNT */}
             <div className="flex items-center">
               <h4 className="font-Mono mr-2" >{getFormatLabel(modalMedia.media.format)} Count:</h4>
-              <input type="number" value={modalMedia.progress}  className="text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalMedia.media.coverImage.color}}/>
+              <input type="number" value={originalProgress}  className="text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalMedia.media.coverImage.color}}/>
               <button 
                 className="font-Mono bg-AniListDarkBlue px-2 rounded-md duration-200" 
                 onMouseEnter={()=> setHovered(true)} 
                 onMouseLeave={()=> setHovered(false)}
+                onClick={()=> setOriginalProgress(prev => (prev !== null ? prev + 1 : originalProgress) )}
                 style={{backgroundColor: hovered ? modalMedia.media.coverImage.color : "initial"}}>
                 +
               </button>
