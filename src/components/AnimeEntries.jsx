@@ -34,7 +34,7 @@ const AnimeEntries = ({animeRes, blurAdult, token, fetchUpdates}) => {
             
             {/* GRID */}
             <div className={`grid gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 lg:grid-cols-3 xl:grid-cols-5" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"}`}>
-            {list.entries.map((anime, i) => (
+            {list.entries.map((anime) => (
                 <div onClick={()=> handleModal(anime)} key={anime.id} className={`hover:cursor-pointer ${borderStyles} flex flex-col justify-center items-center hover:bg-blue-950 duration-200`}>
 
                 <h1 className="text-center font-Mono text-sm mb-1">{anime.media.title.english ? handleTitles(anime.media.title.english) : handleTitles(anime.media.title.romaji)}</h1>

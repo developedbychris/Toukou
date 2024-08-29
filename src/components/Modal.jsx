@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createSanitizedHtml, getFormatLabel } from "../helpers";
+import { createSanitizedHtml, getFormatLabel, getModalStatusLabel } from "../helpers";
 import { mediaProgressMutation } from "../queries";
 import useMediaQuery from "../hooks/useMediaQuery";
 import Accordion from "./Accordion/Accordion";
@@ -18,7 +18,6 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
     setNewProgress(prev => {
       const updatedProgress = (prev === modalMedia.media.episodes || prev === modalMedia.media.chapters) ? prev : prev + 1
       getActivity(updatedProgress)
-      console.log(activity)
       return updatedProgress
     })
   }
@@ -26,16 +25,10 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
   const handleInputChange = (e) => {
     const val = e.target.value;
 
-    // Remove any non-digit characters except for the empty string
-    const numericVal = val.replace(/[^0-9]/g, '');
-
-    
-
-    // Update the state and trigger activity update only if it's a valid numeric input
-    
-      setNewProgress(numericVal);
-      getActivity(numericVal);
-    
+    // removes non digit chars
+    const numericVal = val.replace(/[^0-9]/g, '')
+    setNewProgress(parseInt(numericVal))
+    getActivity(parseInt(numericVal))
   }
 
   const handleBlur = (e) => {
@@ -63,7 +56,6 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
     try {
       const response = await fetch(url, options);
       const data = await response.json();
-      console.log(data);
       if (response.ok && data) {
         fetchUpdates()
       } else {
@@ -73,31 +65,52 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
       console.error('Request failed', error);
     }
   }
-  function getActivity(updatedProgress){
-    const formatLabel = getFormatLabel(modalMedia.media.format)
-    const watchedOrRead = formatLabel === "Episode" ? "watched" : "read"
-    const maxProgress = formatLabel === "Episode" ? modalMedia?.media?.episodes : modalMedia.media.chapters
-    const watchable = formatLabel === "Episode"
-    const title = modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji
-    const mediaUrl = modalMedia.media.siteUrl
-    if (updatedProgress === originalProgress + 1) {
-      // Show single progress entry
-      setActivity(`I ${watchedOrRead} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`);
-    } else if (originalProgress === maxProgress) {
-      // Finished watching/reading
-      setActivity(`I finished ${watchable ? 'watching' : 'reading'} ${title}\nvia @ToukouApp\n${mediaUrl}`);
+
+  function getActivity(updatedProgress) {
+    const formatLabel = getFormatLabel(modalMedia.media.format);
+    const watchedOrRead = formatLabel === "Episode" ? "watched" : "read";
+    const maxProgress = formatLabel === "Episode" ? modalMedia.media.episodes : modalMedia.media.chapters;
+    const title = modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji;
+    const mediaUrl = modalMedia.media.siteUrl;
+    const userStatus = getModalStatusLabel(modalMedia.status, modalMedia.media.format)
+    let action
+    // FOR COMPLETION CONDITIONAL
+    switch (userStatus) {
+      case "re-watched":
+        action = "re-watching"
+        break
+      case "re-read":
+        action = "re-reading"
+        break
+      case "watched":
+        action = "watching"
+        break
+      case "read":
+        action = "reading"
+        break
+      default:
+        action = "watching" 
+    }
+    if (updatedProgress === maxProgress) {
+      // completed reading/watching
+      setActivity(`I finished ${action} ${title}\nvia @ToukouApp\n${mediaUrl}`)
+    } else if (updatedProgress > originalProgress) {
+      // if updating progress to a higher value, show range only if increment is greater than 1
+      if (originalProgress < updatedProgress - 1) {
+          setActivity(`I ${userStatus} ${formatLabel.toLowerCase()}s ${originalProgress + 1} - ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
+      } else {
+        // otherwise, show a single progress entry
+        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
+      }
     } else if (updatedProgress < originalProgress) {
       // For reverse entries
-      setActivity(`I ${watchedOrRead} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`);
-    } else if (updatedProgress > originalProgress) {
-      // Show range if increment is greater than 1
-      setActivity(`I ${watchedOrRead} ${formatLabel.toLowerCase()} ${originalProgress + 1} - ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`);
+      setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
     }
   }
+
   const progressChanged = newProgress !== originalProgress
 
   useEffect(()=>{
-    console.log(modalMedia)
     document.body.classList.add('no-scroll')
     return () => {
         document.body.classList.remove('no-scroll')

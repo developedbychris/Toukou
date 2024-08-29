@@ -29,6 +29,53 @@ const getStatusLabel = (status, type) => {
             return status
     }
 }
+
+const getModalStatusLabel = (status, format) => {
+    switch (true) {
+        case status === "CURRENT" && format === "TV":
+            return "watched"
+        case status === "REPEATING" && format === "TV":
+            return "re-watched"
+        case status === "CURRENT" && format === "MANGA":
+            return "read"
+        case status === "REPEATING" && format === "MANGA":
+            return "re-read"
+        case status === "CURRENT" && format === "MOVIE":
+            return "watched"
+        case status === "REPEATING" && format === "MOVIE":
+            return "re-watched"
+        case status === "CURRENT" && format === "SPECIAL":
+            return "watched"
+        case status === "REPEATING" && format === "SPECIAL":
+            return "re-watched"
+        case status === "CURRENT" && format === "OVA":
+            return "watched"
+        case status === "REPEATING" && format === "OVA":
+            return "re-watched"
+        case status === "CURRENT" && format === "ONA":
+            return "watched"
+        case status === "REPEATING" && format === "ONA":
+            return "re-watched"
+        case status === "CURRENT" && format === "MUSIC":
+            return "watched"
+        case status === "REPEATING" && format === "MUSIC":
+            return "re-watched"
+        case status === "CURRENT" && format === "NOVEL":
+            return "read"
+        case status === "REPEATING" && format === "NOVEL":
+            return "re-read"
+        case status === "CURRENT" && format === "ONE_SHOT":
+            return "read"
+        case status === "REPEATING" && format === "ONE_SHOT":
+            return "re-read"
+        default:
+            return status.toLowerCase()
+    }
+}
+
+
+
+
 const getMediaStatuslabel = (status) =>{
     switch(status){
         case "RELEASING":
@@ -65,4 +112,4 @@ const getFormatLabel = (format) =>{
     }
 }
 
-export {handleTitles, createSanitizedHtml, handleBlur, getStatusLabel, getMediaStatuslabel, getFormatLabel}
+export {handleTitles, createSanitizedHtml, handleBlur, getStatusLabel, getMediaStatuslabel, getFormatLabel, getModalStatusLabel}

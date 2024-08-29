@@ -24,7 +24,7 @@ const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates}) => {
             
             {/* GRID */}
             <div className={`grid gap-4 w-10/12 mx-auto mb-20 ${list.entries.length === 1 ? "grid-cols-1 lg:grid-cols-3 xl:grid-cols-5" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"}`}>
-            {list.entries.map((manga, i) => (
+            {list.entries.map((manga) => (
                 <div onClick={()=> handleModal(manga)}  key={manga.id} className={`hover:cursor-pointer ${borderStyles} flex flex-col justify-center items-center hover:bg-blue-950 duration-200`}>
                     <h1 className=" text-center font-Mono text-sm mb-1">{manga.media.title.english ? handleTitles(manga.media.title.english) : handleTitles(manga.media.title.romaji)}</h1>
                     <img className={`h-48 shadow-md shadow-[#02a9ff] mb-4 ${manga.media.isAdult ? handleBlur(manga.media.isAdult, blurAdult) : ""} rounded-md`} src={manga.media.coverImage.large} alt={manga?.media?.title.english} />

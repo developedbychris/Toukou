@@ -176,7 +176,6 @@ function App() {
         .then(data => data.json())
         .then(data => {
           setAnimeRes(data?.data?.MediaListCollection?.lists)
-          console.log(data?.data?.MediaListCollection?.lists);
         })
         .catch(e => {
           setError(e.message)
@@ -188,7 +187,6 @@ function App() {
         .then(data => data.json())
         .then(data =>{
           setMangaRes(data?.data?.MediaListCollection?.lists)
-          console.log(data?.data?.MediaListCollection?.lists)
         })
         .catch(e => {
           setError(e.message)
