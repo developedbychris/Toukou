@@ -2,8 +2,6 @@ import DOMPurify from "dompurify";
 
 const handleTitles = (title) => title.length <= 50 ? title : `${title.slice(0,50)}...`
 
-const handleModalDescription = (desc) => desc.length <= 900 ? desc : `${desc.slice(0,900)}...`
-
 function createSanitizedHtml(html) {
   return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] }); // removes all tags
 }
@@ -67,4 +65,4 @@ const getFormatLabel = (format) =>{
     }
 }
 
-export {handleTitles, handleModalDescription, createSanitizedHtml, handleBlur, getStatusLabel, getMediaStatuslabel, getFormatLabel}
+export {handleTitles, createSanitizedHtml, handleBlur, getStatusLabel, getMediaStatuslabel, getFormatLabel}
