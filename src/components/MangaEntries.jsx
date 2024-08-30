@@ -11,6 +11,13 @@ const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates}) => {
         setModalMedia(anime)
         setModal(true)
     }
+    const handleBlur = (isAdult) =>{
+        if(isAdult && blurAdult){
+          return "blur-sm"
+        } else{
+          return ""
+        }
+      }
     
     return (
         <>

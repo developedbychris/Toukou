@@ -11,11 +11,18 @@ const AnimeEntries = ({animeRes, blurAdult, token, fetchUpdates}) => {
         setModalMedia(anime)
         setModal(true)
     }
+    const handleBlur = (isAdult) =>{
+        if(isAdult && blurAdult){
+          return "blur-sm"
+        } else{
+          return ""
+        }
+      }
 
     return (
         <>
             {
-            animeRes.map((list, i)=>(
+            animeRes.map((list)=>(
             <React.Fragment key={list.name}>
             <div  className="-z-50 w-10/12 mx-auto flex flex-col justify-center items-center mb-6 font-Mono font-black select-none relative myBorder">
                 <h1 className="text-4xl">ANIME</h1>
@@ -24,7 +31,6 @@ const AnimeEntries = ({animeRes, blurAdult, token, fetchUpdates}) => {
                     getStatusLabel(list?.status, "anime") === "REPEATING" ? (
                     <>
                         {getStatusLabel(list.status, "anime")}
-                        <img src={repeatIcon} alt="repeating icon" className="h-40 ml-2"/>
                         
                     </>
                     ) : getStatusLabel(list.status, "anime")
