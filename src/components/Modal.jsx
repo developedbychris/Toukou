@@ -9,7 +9,10 @@ const modalCSS = "w-full h-full top-0 left-0 fixed"
 
 const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
   const isMobile = useMediaQuery('(max-width: 640px)')
+  const isTablet = useMediaQuery('(max-width: 1023px)')
+  const isTabletAndMobile = useMediaQuery('(max-width: 767px)')
   const [hovered, setHovered] = useState(false)
+  const [hovered2, setHovered2] = useState(false)
   const originalProgress = modalMedia.progress
   const [newProgress, setNewProgress] = useState(modalMedia.progress)
   const [activity, setActivity] = useState(null)
@@ -17,6 +20,14 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
   const handleIncrement = () => {
     setNewProgress(prev => {
       const updatedProgress = (prev === modalMedia.media.episodes || prev === modalMedia.media.chapters) ? prev : prev + 1
+      getActivity(updatedProgress)
+      return updatedProgress
+    })
+  }
+
+  const handleDecrement = () => {
+    setNewProgress(prev => {
+      const updatedProgress = (prev === 1) || (prev === 0) ? prev : prev - 1
       getActivity(updatedProgress)
       return updatedProgress
     })
@@ -33,7 +44,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
 
   const handleBlur = (e) => {
     if (e.target.value === "") {
-        setNewProgress(originalProgress)
+      setNewProgress(originalProgress)
     }
   }
   const handleMediaUpdate = async () =>{
@@ -68,7 +79,6 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
 
   function getActivity(updatedProgress) {
     const formatLabel = getFormatLabel(modalMedia.media.format);
-    const watchedOrRead = formatLabel === "Episode" ? "watched" : "read";
     const maxProgress = formatLabel === "Episode" ? modalMedia.media.episodes : modalMedia.media.chapters;
     const title = modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji;
     const mediaUrl = modalMedia.media.siteUrl;
@@ -97,12 +107,12 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
     } else if (updatedProgress > originalProgress) {
       // if updating progress to a higher value, show range only if increment is greater than 1
       if (originalProgress < updatedProgress - 1) {
-          setActivity(`I ${userStatus} ${formatLabel.toLowerCase()}s ${originalProgress + 1} - ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
+        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()}s ${originalProgress + 1} - ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
       } else {
         // otherwise, show a single progress entry
         setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
       }
-    } else if (updatedProgress < originalProgress) {
+    } else if (updatedProgress < originalProgress){
       // For reverse entries
       setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
     }
@@ -124,37 +134,77 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
       {/* OVERLAY */}
       <div className={`${modalCSS} bg-[rgba(49,49,49,0.8)] overflow-hidden`} onClick={isMobile ? closeModal : null}/>
       {/* MODAL CONTENT */}
-      <div className="modal-content max-h-[75vh] md:max-h-[55vh] 2xl:max-h-[75vh] px-10 py-5  w-11/12 md:w-11/12 lg:w-10/12 xl:w-6/12 rounded-xl mx-auto mt-10 border-b-2 border-l-2" style={{borderColor: modalMedia.media.coverImage.color, scrollbarColor: `${modalMedia.media.coverImage.color} #1a2b4a`}}>
+      <div className="modal-content max-h-[75vh] md:max-h-[55vh] 2xl:max-h-[40vh] px-10 py-5  w-11/12 md:w-11/12 lg:w-10/12 xl:w-6/12 rounded-xl mx-auto mt-10 border-b-2 border-l-2" style={{borderColor: modalMedia.media.coverImage.color, scrollbarColor: `${modalMedia.media.coverImage.color} #1a2b4a`}}>
         <div className="flex justify-end">
           <RiCloseCircleFill className={`close-btn scale-150 duration-200 hover:cursor-pointer`} style={{'--default-color': modalMedia.media.coverImage.color}} onClick={closeModal}/>
         </div>
         <div className="flex flex-col md:flex-row justify-start items-center md:items-start rounded-md" >
           {/* IMAGE DIV */}
-          <div className="max-h-96 mr-2 p-0 flex flex-col items-center mb-3 md:mb-0 ">
+          <div className="max-h-96 mr-2 p-0 flex flex-col items-center mb-3 md:mb-0 rounded-lg">
             <img className="w-40 md:w-auto rounded-lg" src={modalMedia.media.coverImage.large} alt={modalMedia.media.title.romaji} />
             
             <a className="mt-2" href={modalMedia.media.siteUrl} target="_blank">
-              <img className="h-7 hover:scale-125 duration-200" src="https://anilist.co/img/icons/icon.svg" alt="AniList Logo" />
+              <img className="h-7 hover:scale-125 duration-200 AL" src="https://anilist.co/img/icons/icon.svg" alt="AniList Logo" />
             </a>
           </div>
-          <div className="flex flex-col justify-center items-center md:justify-start md:items-start w-full px-2">
+          <div className="flex flex-col justify-center items-center md:justify-start md:items-start w-full px-2 ">
             {/* Titles*/}
             <h1 className="font-Mono text-2xl text-neutral-200 text-center mb-1">{modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji}</h1>
             <h5 className="font-Japanese text-sm font-light mb-4 tracking-wide text-center" style={{color: modalMedia.media.coverImage.color}}>{modalMedia?.media?.title?.native}</h5>
             {/* PROGRESS COUNT */}
             <div className="flex items-center">
-              <h4 className="font-Mono mr-2" >{getFormatLabel(modalMedia.media.format)} Count:</h4>
-              <input type="number"  onBlur={handleBlur} value={parseInt(newProgress)} onChange={handleInputChange}  className="text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalMedia.media.coverImage.color}}/>
-              <button 
-                className="font-Mono bg-AniListDarkBlue px-2 rounded-md duration-200" 
+              <h4 className="font-Mono mr-2 text-lg lg:text-base" >{getFormatLabel(modalMedia.media.format)} Count:</h4>
+              <input type="number"  onBlur={handleBlur} value={parseInt(newProgress)} onChange={handleInputChange}  className="text-lg lg:text-base  text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalMedia.media.coverImage.color}}/>
+              {/* INC/DEC BUTTONS */}
+              {
+                !isTabletAndMobile && (
+                <div className="font-black font-Japanese">
+                  <button 
+                  className="bg-AniListDarkBlue py-1 lg:py-0 px-4 lg:px-3 rounded-md duration-200 mr-1" 
+                  onMouseEnter={()=> setHovered2(true)} 
+                  onMouseLeave={()=> setHovered2(false)}
+                  onClick={handleDecrement}
+                  style={{backgroundColor: hovered2 || isTablet ? modalMedia.media.coverImage.color : "initial"}}>
+                    -
+                  </button>
+                  <button 
+                  className="bg-AniListDarkBlue py-1 lg:py-0 px-4 lg:px-3 rounded-md duration-200" 
+                  onMouseEnter={()=> setHovered(true)} 
+                  onMouseLeave={()=> setHovered(false)}
+                  onClick={handleIncrement}
+                  style={{backgroundColor: hovered || isTablet ? modalMedia.media.coverImage.color : "initial"}}>
+                    +
+                  </button>
+                </div>
+                )
+              }
+            </div>
+
+            {
+              isTabletAndMobile &&(
+              <div className="my-4 font-black font-Japanese flex items-center justify-center w-6/12">
+                <button 
+                className="w-full bg-AniListDarkBlue py-1 lg:py-0 px-4 lg:px-2 rounded-md duration-200 mr-1" 
+                onMouseEnter={()=> setHovered2(true)} 
+                onMouseLeave={()=> setHovered2(false)}
+                onClick={handleDecrement}
+                style={{backgroundColor: hovered2 ? "#0c1522" : modalMedia.media.coverImage.color}}>
+                  -
+                </button>
+                <button 
+                className="w-full bg-AniListDarkBlue py-1 lg:py-0 px-4 lg:px-2 rounded-md duration-200 hover:bg-AniListDarkBlue" 
                 onMouseEnter={()=> setHovered(true)} 
                 onMouseLeave={()=> setHovered(false)}
                 onClick={handleIncrement}
-                style={{backgroundColor: hovered ? modalMedia.media.coverImage.color : "initial"}}>
-                +
-              </button>
-            </div>
-            {
+                style={{backgroundColor: hovered ? "#0c1522" : modalMedia.media.coverImage.color}}>
+                  +
+                </button>
+              </div>
+              )
+          }
+
+            {/* COMMIT PROGRESS BUTTONS */}
+            { 
               progressChanged && (
                 <div className="mt-4 flex flex-col md:flex-row justify-center font-Japanese">
                   <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`} target="_blank" onClick={handleMediaUpdate}>
@@ -173,7 +223,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
                 </div>
               )
             }
-            <Accordion modalMediaColor={modalMedia.media.coverImage.color} title="Synopsis" content={createSanitizedHtml(modalMedia.media.description)}/>
+            <Accordion modalMediaColor={modalMedia.media.coverImage.color} title="Synopsis" content={createSanitizedHtml(modalMedia.media.description)} modal={true}/>
           </div>
         </div>
       </div>

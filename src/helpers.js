@@ -74,8 +74,6 @@ const getModalStatusLabel = (status, format) => {
 }
 
 
-
-
 const getMediaStatuslabel = (status) =>{
     switch(status){
         case "RELEASING":

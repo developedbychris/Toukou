@@ -198,7 +198,7 @@ function App() {
   },[userID, token])
 
   return (
-    <div className="mx-auto flex flex-col min-h-screen">
+    <div className="mx-auto flex flex-col min-h-screen overflow-x-hidden">
       
       <Header fetchUpdates={fetchUpdates} logOut={logOut} loading={loading} userData={userData}/>
       {/* WELCOME SECTION */}
