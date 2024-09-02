@@ -182,7 +182,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
 
             {
               isTabletAndMobile &&(
-              <div className="my-4 font-black font-Japanese flex items-center justify-center w-6/12">
+              <div className="my-4 font-black flex items-center justify-center w-6/12">
                 <button 
                 className="w-full bg-AniListDarkBlue py-1 lg:py-0 px-4 lg:px-2 rounded-md duration-200 mr-1" 
                 onMouseEnter={()=> setHovered2(true)} 
@@ -206,7 +206,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
             {/* COMMIT PROGRESS BUTTONS */}
             { 
               progressChanged && (
-                <div className="mt-4 flex flex-col md:flex-row justify-center font-Japanese">
+                <div className="mt-4 flex flex-col md:flex-row justify-center">
                   <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`} target="_blank" onClick={handleMediaUpdate}>
                     <button 
                       className="bg-green-600 hover:bg-green-700 mb-2 md:mb-0 text-white px-3 py-2 rounded-md duration-300 mr-2"
