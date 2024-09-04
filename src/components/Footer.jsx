@@ -1,4 +1,3 @@
-import React from 'react'
 import TKLogo from "../assets/TKLogo.png"
 const handleClick = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })

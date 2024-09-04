@@ -1,4 +1,3 @@
-import React from 'react'
 import chika from "../assets/chika.gif"
 import Accordion from "./Accordion/Accordion"
 import { FAQtext } from "../faq"

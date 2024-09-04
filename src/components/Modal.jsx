@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { createSanitizedHtml, getFormatLabel, getModalStatusLabel } from "../helpers";
 import { mediaProgressMutation } from "../queries";
 import useMediaQuery from "../hooks/useMediaQuery";

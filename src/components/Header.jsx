@@ -1,6 +1,4 @@
-import React from 'react'
 import useMediaQuery from "../hooks/useMediaQuery"
-import { SlLogout } from "react-icons/sl"
 import UserButtons from "./UserButtons"
 
 const Header = ({fetchUpdates, logOut, loading, userData}) => {

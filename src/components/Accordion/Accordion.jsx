@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import './accordion.css'
 const Accordion = ({ title, content, modalMediaColor, faq, modal }) => {
     const [isOpen, setIsOpen] = useState(modal);
