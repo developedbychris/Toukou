@@ -155,8 +155,8 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
             <div className="flex items-center">
               <h4 className="font-Mono mr-2 text-lg lg:text-base" >{getFormatLabel(modalMedia.media.format)} Count:</h4>
               <input type="number"  onBlur={handleBlur} value={parseInt(newProgress)} onChange={handleInputChange}  className="text-lg lg:text-base  text-neutral-200 w-12 text-center outline-none bg-AniListDarkBlue rounded-md mr-1" style={{caretColor: modalMedia.media.coverImage.color}}/>
-              {/* INC/DEC BUTTONS */}
-              {
+              
+              { /* INC/DEC BUTTONS */
                 !isTabletAndMobile && (
                 <div className="font-black font-Japanese">
                   <button 
@@ -180,7 +180,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
               }
             </div>
 
-            {
+              { /* INC/DEC BUTTONS */
               isTabletAndMobile &&(
               <div className="my-4 font-black font-Japanese flex items-center justify-center w-6/12">
                 <button 
@@ -201,12 +201,11 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
                 </button>
               </div>
               )
-          }
+            }
 
-            {/* COMMIT PROGRESS BUTTONS */}
-            { 
+            { /* COMMIT PROGRESS BUTTONS */
               progressChanged && (
-                <div className="mt-4 flex flex-col md:flex-row justify-center font-Japanese">
+                <div className="mt-4 flex flex-col md:flex-row justify-center">
                   <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`} target="_blank" onClick={handleMediaUpdate}>
                     <button 
                       className="bg-green-600 hover:bg-green-700 mb-2 md:mb-0 text-white px-3 py-2 rounded-md duration-300 mr-2"
