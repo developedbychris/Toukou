@@ -182,7 +182,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
 
               { /* INC/DEC BUTTONS */
               isTabletAndMobile &&(
-              <div className="my-4 font-black font-Japanese flex items-center justify-center w-6/12">
+              <div className="my-4 font-black flex items-center justify-center w-6/12">
                 <button 
                 className="w-full bg-AniListDarkBlue py-1 lg:py-0 px-4 lg:px-2 rounded-md duration-200 mr-1" 
                 onMouseEnter={()=> setHovered2(true)} 
