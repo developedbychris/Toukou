@@ -54,7 +54,7 @@ const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates}) => {
                 
                 <img  className={`h-48 shadow-md mb-4 ${manga.media.isAdult ? handleBlur(manga.media.isAdult, blurAdult) : ""}  rounded-md`} src={manga.media.coverImage.large} alt={manga?.media?.title.english} style={{ boxShadow: `0 4px 6px -1px ${manga.media.coverImage.color}` }} />
                 
-                <h1 className="text-center mb-2 font-Mono text-sm font-black text-neutral-300">{manga.progress} / {manga.media.episodes}</h1>
+                <h1 className="text-center mb-2 font-Mono text-sm font-black text-neutral-300">{manga.progress} / {manga.media.chapters ? manga.media.chapters : getMediaStatuslabel(manga.media.status)}</h1>
 
                 </div>
             ))}
