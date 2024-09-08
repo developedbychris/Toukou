@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://toukou.co/logo.png" alt="Toukou Logo" width="150"/>
+</p>
+
 # Toukou
 
 Toukou is a front-end web application that integrates with AniList to track anime and manga that users are currently watching or reading. It provides features for updating and managing lists, with a focus on sharing updates to Twitter/X.
@@ -10,4 +14,4 @@ Toukou is a front-end web application that integrates with AniList to track anim
 - **Twitter Integration:** Tweet updates about your progress directly from the app.
 
 
-<img src="https://toukou.co/logo.png" alt="Toukou Logo" width="150"/>
+
