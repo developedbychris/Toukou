@@ -263,8 +263,8 @@ function App() {
         (
           <>
             <div className="mx-auto flex text-4xl font-Mono font-black text-neutral-200">
-              {animeRes?.length > 0 && (<button className={`${mangaRes?.length ? "mr-7" : ""} ${tab === 'anime' ? 'text-AniListBlue':''}`} onClick={()=> setTab("anime")}>ANIME</button>)}
-              {mangaRes?.length > 0 && (<button className={`${tab === 'manga' ? 'text-AniListBlue':''}`} onClick={()=> setTab("manga")}>MANGA</button>)}
+              {animeRes?.length > 0 && (<button className={`${mangaRes?.length ? "mr-7" : ""} ${tab === 'anime' ? 'text-AniListBlue underline underline-offset-8 animate-pulse hover:animate-none':''} hover:animate-pulse`} onClick={()=> setTab("anime")}>ANIME</button>)}
+              {mangaRes?.length > 0 && (<button className={`${tab === 'manga' ? 'text-AniListBlue underline underline-offset-8 hover:animate-none animate-pulse':''} hover:animate-pulse`} onClick={()=> setTab("manga")}>MANGA</button>)}
             </div>
 
             <TransitionGroup>
