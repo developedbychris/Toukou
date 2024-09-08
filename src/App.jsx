@@ -1,5 +1,6 @@
 import { useCallback } from "react"
 import { useEffect, useState } from 'react'
+import { TransitionGroup, CSSTransition } from "react-transition-group"
 import useMediaQuery from "./hooks/useMediaQuery"
 import { initQuery, mangaQuery, animeQuery } from "./queries"
 import Header from "./components/Header"
@@ -19,8 +20,8 @@ export const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 
 // cloud id: 436069
 // dude who only reads manga: 6185934
 function App() {
-  const [animeRes, setAnimeRes] = useState(null)
-  const [mangaRes, setMangaRes] = useState(null)
+  const [animeRes, setAnimeRes] = useState([])
+  const [mangaRes, setMangaRes] = useState([])
   const [tab, setTab] = useState(null)
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(false) 
@@ -255,7 +256,7 @@ function App() {
         </div>
       )}
 
-      {/* ANIME ENTRIES */}
+      {/* MEDIA ENTRIES */}
       {loading ? (
         <img src={loadingIcon} className="w-36 mx-auto"/>
       ) : animeRes?.length > 0 || mangaRes?.length > 0 ? 
@@ -266,21 +267,22 @@ function App() {
               {mangaRes?.length > 0 && (<button className={`${tab === 'manga' ? 'text-AniListBlue':''}`} onClick={()=> setTab("manga")}>MANGA</button>)}
             </div>
 
-            {tab === 'anime' && <AnimeEntries animeRes={animeRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>}
-            {tab === 'manga' && <MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>}
+            <TransitionGroup>
+              <CSSTransition key={tab} timeout={300} classNames={'fade'} unmountOnExit>
+                {tab === 'anime' ? 
+                  (<AnimeEntries animeRes={animeRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>)
+                  :
+                  (<MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>)
+                }
+              </CSSTransition>
+            </TransitionGroup>
+            
           </>
         )
       : 
         null
       }
-      
-       {/* Manga ENTRIES */}
-       {/* {loading ? (
-        <img src={loadingIcon} className="w-36 mx-auto"/>
-      ) : mangaRes?.length > 0 ? (
-        <MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>
-      ) : null} */}
-      
+
       <Footer/>
       
     </div>

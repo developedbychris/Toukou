@@ -16,6 +16,7 @@ body{
   clip-path: polygon(0 0, 100% 0, 100% 75%, 85% 90%, 70% 100%, 30% 100%, 15% 90%, 0 75%);
 }
 
+
 .myBorder::after{
   content:'';
   position: absolute;
@@ -26,6 +27,26 @@ body{
   margin-top: 10px;
   background: linear-gradient(to right, transparent, #eeeeee 50%, transparent)
 }
+
+.fade-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
 
 
 .modal-content {
