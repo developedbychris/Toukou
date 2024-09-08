@@ -38,7 +38,7 @@ const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates}) => {
                     <img className={`h-24 mr-4 shadow-md ${manga.media.isAdult ? handleBlur(manga.media.isAdult, blurAdult) : ""}  rounded-md`} src={manga.media.coverImage.large} alt={manga?.media?.title.english} style={{ boxShadow: `0 4px 6px -1px ${manga.media.coverImage.color}` }}/>
                     <div className="flex flex-col mx-auto justify-around">
                         <h1 className="text-start font-Mono text-sm mb-1">{manga.media.title.english ? handleTitles(manga.media.title.english) : handleTitles(manga.media.title.romaji)}</h1>
-                        <h1 className="text-center font-Mono font-black text-sm text-neutral-300">{manga.progress} / {manga.media.episodes}</h1>
+                        <h1 className="text-center font-Mono font-black text-sm text-neutral-300">{manga.progress} / {manga.media.chapters ? manga.media.chapters : getMediaStatuslabel(manga.media.status)}</h1>
                     </div>
                 </div>
              ))}
