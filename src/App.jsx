@@ -21,10 +21,12 @@ export const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 
 function App() {
   const [animeRes, setAnimeRes] = useState(null)
   const [mangaRes, setMangaRes] = useState(null)
+  const [tab, setTab] = useState(null)
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(false) 
   const [error, setError] = useState(null)
   const [token, setToken] = useState(localStorage.getItem("access_token"))
+
   const [userID, setUserID] = useState(null)
   const [blurAdult, setBlurAdult] = useState(false)
   const isMobile = useMediaQuery('(max-width: 767px)')
@@ -197,6 +199,14 @@ function App() {
     }
   },[userID, token])
 
+  useEffect(()=>{
+    if(animeRes?.length > 0){
+      setTab('anime')
+    } else if(mangaRes?.length > 0){
+      setTab('manga')
+    }
+  }, [animeRes, mangaRes])
+
   return (
     <div className="mx-auto flex flex-col min-h-screen overflow-x-hidden">
       
@@ -248,18 +258,28 @@ function App() {
       {/* ANIME ENTRIES */}
       {loading ? (
         <img src={loadingIcon} className="w-36 mx-auto"/>
-      ) : animeRes?.length > 0 ? (
-        <AnimeEntries animeRes={animeRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>
-      ) : 
+      ) : animeRes?.length > 0 || mangaRes?.length > 0 ? 
+        (
+          <>
+            <div className="mx-auto flex text-4xl font-Mono font-black text-neutral-200">
+              {animeRes?.length > 0 && (<button className={`${mangaRes?.length ? "mr-7" : ""} ${tab === 'anime' ? 'text-AniListBlue':''}`} onClick={()=> setTab("anime")}>ANIME</button>)}
+              {mangaRes?.length > 0 && (<button className={`${tab === 'manga' ? 'text-AniListBlue':''}`} onClick={()=> setTab("manga")}>MANGA</button>)}
+            </div>
+
+            {tab === 'anime' && <AnimeEntries animeRes={animeRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>}
+            {tab === 'manga' && <MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>}
+          </>
+        )
+      : 
         null
       }
       
        {/* Manga ENTRIES */}
-       {loading ? (
+       {/* {loading ? (
         <img src={loadingIcon} className="w-36 mx-auto"/>
       ) : mangaRes?.length > 0 ? (
         <MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>
-      ) : null}
+      ) : null} */}
       
       <Footer/>
       
