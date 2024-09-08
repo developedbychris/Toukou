@@ -10,4 +10,4 @@ Toukou is a front-end web application that integrates with AniList to track anim
 - **Twitter Integration:** Tweet updates about your progress directly from the app.
 
 
-![Toukou Logo](https://toukou.co/logo.png)
+<img src="https://toukou.co/logo.png" alt="Toukou Logo" width="150"/>
