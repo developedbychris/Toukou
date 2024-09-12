@@ -29,6 +29,13 @@ const animeQuery = `
         entries {
           id
           media {
+            averageScore
+            genres
+            startDate {
+              year
+              month
+              day
+            }
             episodes
             hashtag
             description(asHtml: true)
@@ -66,6 +73,13 @@ const mangaQuery = `
         entries {
           id
           media {
+            averageScore
+            genres
+            startDate {
+              year
+              month
+              day
+            }
             chapters
             hashtag
             description(asHtml: true)

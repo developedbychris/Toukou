@@ -109,5 +109,38 @@ const getFormatLabel = (format) =>{
             return "Chapter"
     }
 }
-
-export {handleTitles, createSanitizedHtml, handleBlur, getStatusLabel, getMediaStatuslabel, getFormatLabel, getModalStatusLabel}
+const getRatingColor = (score) => {
+    if (score >= 85) return '#22c55e';   
+    if (score >= 70) return '#84cc16';   
+    if (score >= 55) return '#facc15';   
+    if (score >= 40) return '#fb923c';  
+    return '#ef4444';                   
+}
+const months = [ "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December" 
+]
+const getOrdinal = (n)=> {
+    let ord = 'th';
+  
+    if (n % 10 == 1 && n % 100 != 11)
+    {
+      ord = 'st';
+    }
+    else if (n % 10 == 2 && n % 100 != 12)
+    {
+      ord = 'nd';
+    }
+    else if (n % 10 == 3 && n % 100 != 13)
+    {
+      ord = 'rd';
+    }
+  
+    return n + ord
+}
+export {
+    handleTitles, createSanitizedHtml,
+    handleBlur, getStatusLabel, 
+    getMediaStatuslabel, getFormatLabel, 
+    getModalStatusLabel, months, 
+    getOrdinal, getRatingColor
+}

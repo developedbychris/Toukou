@@ -1,9 +1,13 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import './accordion.css'
+import useMediaQuery from "../../hooks/useMediaQuery";
 const Accordion = ({ title, content, modalMediaColor, faq, modal }) => {
-    const [isOpen, setIsOpen] = useState(modal);
-
-    const toggleAccordion = () => setIsOpen(!isOpen)
+  const isMobile = useMediaQuery('(max-width: 640px)')  
+  const [isOpen, setIsOpen] = useState(!isMobile);
+  useEffect(()=>{
+    setIsOpen(!isMobile)
+  },[isMobile])
+  const toggleAccordion = () => setIsOpen(!isOpen)
 
     return (
         <div className={`w-full ${faq ? "mb-3" : ""}`}>
@@ -23,9 +27,9 @@ const Accordion = ({ title, content, modalMediaColor, faq, modal }) => {
               </svg>
             </div>
         {isOpen && (
-          <div className={` mt-1 accordion-content ${isOpen ? 'open' : ''} ${faq ? "text-neutral-300" : "text-neutral-200"} font-Roboto font-light`}>
+          <p className={` z-[99] mt-1 accordion-content ${isOpen ? 'open' : ''} ${faq ? "text-neutral-300" : "text-neutral-200"} font-Roboto font-light`}>
             {content}
-          </div>
+          </p>
         )}
       </div>
     );

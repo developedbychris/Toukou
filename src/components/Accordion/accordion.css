@@ -9,5 +9,6 @@
 
 .accordion-content {
   animation: fadeIn 0.5s ease-out;
+  backface-visibility: hidden;
 }
 

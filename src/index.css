@@ -53,11 +53,12 @@ body{
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #152232;
+  background: rgba(21, 34, 50, 1);
   overflow-y: auto;
   scrollbar-width: thin;
   z-index: 50;
 }
+
 
 /* Webkit-based browsers (Chrome, Safari) */
 .modal-content::-webkit-scrollbar {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createSanitizedHtml, getFormatLabel, getModalStatusLabel } from "../helpers";
+import { createSanitizedHtml, getFormatLabel, getModalStatusLabel, months, getOrdinal, getRatingColor } from "../helpers";
 import { mediaProgressMutation } from "../queries";
 import useMediaQuery from "../hooks/useMediaQuery";
 import Accordion from "./Accordion/Accordion";
@@ -114,7 +114,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
       }
     } else if (updatedProgress < originalProgress){
       // For reverse entries
-      setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
+      setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
     }
   }
 
@@ -138,7 +138,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
         <div className="flex justify-end">
           <RiCloseCircleFill className={`close-btn scale-150 duration-200 hover:cursor-pointer`} style={{'--default-color': modalMedia.media.coverImage.color}} onClick={closeModal}/>
         </div>
-        <div className="flex flex-col md:flex-row justify-start items-center md:items-start rounded-md" >
+        <div className="flex flex-col md:flex-row justify-start items-center md:items-start rounded-lg" >
           {/* IMAGE DIV */}
           <div className="max-h-96 mr-2 p-0 flex flex-col items-center mb-3 md:mb-0 rounded-lg">
             <img className="w-40 md:w-auto rounded-lg" src={modalMedia.media.coverImage.large} alt={modalMedia.media.title.romaji} />
@@ -149,8 +149,19 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
           </div>
           <div className="flex flex-col justify-center items-center md:justify-start md:items-start w-full px-2 ">
             {/* Titles*/}
-            <h1 className="font-Mono text-2xl text-neutral-200 text-center mb-1">{modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji}</h1>
-            <h5 className="font-Japanese text-sm font-light mb-4 tracking-wide text-center" style={{color: modalMedia.media.coverImage.color}}>{modalMedia?.media?.title?.native}</h5>
+            <h1 className="font-Mono text-2xl text-white text-center mb-1 font-semibold">{modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji}</h1>
+            <h5 className="font-Japanese text-sm font-light mb-4 tracking-wide text-center italic" style={{color: modalMedia.media.coverImage.color}}>{modalMedia?.media?.title?.native}</h5>
+            <div className={`${isTabletAndMobile ? "bg-[#101b27] p-3 rounded-lg" :""} mb-4`}>
+              <h5 className="font-Mono text-sm font-semibold mb-2 text-start tracking-tighter text-neutral-300">
+                Released: {months[modalMedia?.media?.startDate.month - 1]} {getOrdinal(modalMedia?.media?.startDate?.day)}, <span style={{color: modalMedia.media.coverImage.color}}>{modalMedia?.media?.startDate.year} </span>
+              </h5>
+              <h5 className="font-Mono text-sm mb-2 text-start tracking-tighter font-semibold text-neutral-300">
+              Genres: <span style={{color: modalMedia.media.coverImage.color}}>{modalMedia?.media?.genres?.join(", ")}</span>
+              </h5>
+              <h5 className="font-Mono text-sm text-start font-semibold text-neutral-300">
+                Avg. AL User Score: <span style={{color: getRatingColor(modalMedia?.media?.averageScore)}}>{modalMedia?.media?.averageScore} %</span>
+              </h5>
+            </div>
             {/* PROGRESS COUNT */}
             <div className="flex items-center">
               <h4 className="font-Mono mr-2 text-lg lg:text-base" >{getFormatLabel(modalMedia.media.format)} Count:</h4>
@@ -206,18 +217,18 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
             { /* COMMIT PROGRESS BUTTONS */
               progressChanged && (
                 <div className="mt-4 flex flex-col md:flex-row justify-center">
-                  <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`} target="_blank" onClick={handleMediaUpdate}>
+                  <a href={`https://twitter.com/intent/Post?text=${encodeURIComponent(activity)}`} target="_blank" onClick={handleMediaUpdate}>
                     <button 
                       className="bg-green-600 hover:bg-green-700 mb-2 md:mb-0 text-white px-3 py-2 rounded-md duration-300 mr-2"
                     >
-                      Commit Changes and Tweet
+                      Update and Post
                     </button>
                   </a>
                   <button 
                     className="bg-AniListDarkBlue hover:bg-AniListBlue text-white px-3 py-2 rounded-md duration-300 mr-2"
                     onClick={handleMediaUpdate}
                   >
-                    Commit Changes
+                    Update
                   </button>
                 </div>
               )
