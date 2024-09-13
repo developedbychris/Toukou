@@ -103,14 +103,14 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
     }
     if (updatedProgress === maxProgress) {
       // completed reading/watching
-      setActivity(`I finished ${action} ${title}\nvia @ToukouApp\n${mediaUrl}`)
+      setActivity(`I finished ${action} ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
     } else if (updatedProgress > originalProgress) {
       // if updating progress to a higher value, show range only if increment is greater than 1
       if (originalProgress < updatedProgress - 1) {
-        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()}s ${originalProgress + 1} - ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
+        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()}s ${originalProgress + 1} - ${updatedProgress} of ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
       } else {
         // otherwise, show a single progress entry
-        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\nvia @ToukouApp\n${mediaUrl}`)
+        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
       }
     } else if (updatedProgress < originalProgress){
       // For reverse entries
