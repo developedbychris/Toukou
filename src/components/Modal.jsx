@@ -217,7 +217,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
             { /* COMMIT PROGRESS BUTTONS */
               progressChanged && (
                 <div className="mt-4 flex flex-col md:flex-row justify-center">
-                  <a href={`https://twitter.com/intent/Post?text=${encodeURIComponent(activity)}`} target="_blank" onClick={handleMediaUpdate}>
+                  <a onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`, '_blank', 'noopener noreferrer')}>
                     <button 
                       className="bg-green-600 hover:bg-green-700 mb-2 md:mb-0 text-white px-3 py-2 rounded-md duration-300 mr-2"
                     >
