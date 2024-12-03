@@ -9,7 +9,7 @@ import loadingIcon from "./assets/loading.svg"
 import AnimeEntries from "./components/AnimeEntries"
 import MangaEntries from "./components/MangaEntries"
 import WelcomeSection from "./components/WelcomeSection"
-import UserButtons from "./components/UserButtons"
+import UserInfo from "./components/UserInfo"
 
 export const url = 'https://graphql.anilist.co'
 export const borderStyles = "p-5 border-t-[#02a9ff] border-r-[#174c66] border-4 rounded-md h-[19rem]"
@@ -30,6 +30,11 @@ function App() {
 
   const [userID, setUserID] = useState(null)
   const [blurAdult, setBlurAdult] = useState(false)
+
+  const [platform, setPlatform] = useState('x')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [authenticated, setAuthenticated] =  useState(false)
   const isMobile = useMediaQuery('(max-width: 767px)')
   // FOR THE LOGOUT BUTTON
   const logOut = () =>{
@@ -220,28 +225,10 @@ function App() {
       
       {/* USER INFO */}
       {userData && (
-        <div className="py-6 w-full mx-auto flex flex-col items-center justify-center mb-20 select-none bg-slate-900 profileclip">
-          <h1 className="w-9/12 font-Mono font-bold text-lg md:text-2xl mb-2 text-center">Welcome {userData.name}!</h1>
-          <div className="flex w-auto">
-            {/* USER PROFILE PIC */}
-            <div className="h-16 w-16 md:w-32 md:h-32 mr-2 rounded-md">
-              <img className="h-full w-full rounded-md object-cover" src={userData.avatar.large} alt={`${userData}'s avatar`} />
-            </div>
-            <div className="flex flex-col items-start justify-center">
-              <h1 className="font-Mono font-bold text-sm md:text-xl mb-1 md:mb-2 tracking-tighter">Episodes Watched: {userData.statistics.anime.episodesWatched}</h1>
-              <h1 className="font-Mono font-bold text-sm md:text-xl mb-1 md:mb-2 tracking-tighter">Chapters Read: {userData.statistics.manga.chaptersRead}</h1>
-              <div className="flex items-center p-0 m-0 ">
-                <h6 className="font-Roboto text-xs md:text-lg mr-1 font-bold">Blur 18+ Covers</h6>
-                <input className="h-2 md:h-3 outline-none border-none" disabled={!animeRes && !mangaRes} type="checkbox" onChange={()=> setBlurAdult(!blurAdult) }/>
-              </div>
-            </div>
-          </div>
-
-          {isMobile &&(
-            <UserButtons fetchUpdates={fetchUpdates} logOut={logOut} loading={loading} />
-          )}
-          
-        </div>
+        <UserInfo userData={userData} animeRes={animeRes} mangaRes={mangaRes} setBlurAdult={setBlurAdult}
+        blurAdult={blurAdult} isMobile={isMobile} fetchUpdates={fetchUpdates} logOut={logOut} loading={loading}
+        platform={platform} setPlatform={setPlatform} username={username} setUsername={setUsername}
+        password={password} setPassword={setPassword}/>
       )}
       
       {/* ERROR MESSAGE */}

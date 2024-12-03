@@ -17,6 +17,7 @@ export default {
         'AniListDarkBlue': "#0c1522",
         'HeaderBG': "#152232",
         'TwitterBlue': "#26a7de",
+        'BlueskyBlue': '#1185fe'
       }
     },
   },

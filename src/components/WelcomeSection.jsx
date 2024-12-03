@@ -13,7 +13,7 @@ const WelcomeSection = () => {
           </p>
 
           <a href='https://anilist.co/api/v2/oauth/authorize?client_id=20510&response_type=token'>
-            <button className="bg-[#02a9ff] px-6 py-3 rounded-lg font-Mono text-lg md:text-2xl text-neutral-200 hover:bg-[#0288d1] duration-300">
+            <button className="bg-AniListBlue px-6 py-3 rounded-lg font-Mono text-lg md:text-2xl text-neutral-200 hover:bg-[#0288d1] duration-300">
               Login With AniList
             </button>
           </a>
