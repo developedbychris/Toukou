@@ -1,6 +1,8 @@
 import React from 'react'
 import { RiCloseCircleFill } from "react-icons/ri"
 function PlatformModal({platform, handlePlatformChange, isMobile, closeModal, username, setUsername, password, setPassword}) {
+    
+    //* need to add handle functions from test
 
     const handleUsernameChange = (e) => setUsername(e.target.value)
     const handlePasswordChange = (e) => setPassword(e.target.value)

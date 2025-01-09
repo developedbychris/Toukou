@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
 import UserButtons from "./UserButtons"
 import PlatformModal from "./PlatformModal"
+import AtpAgent from "@atproto/api"
 
 function UserInfo({userData, animeRes, mangaRes, setBlurAdult, blurAdult, isMobile, fetchUpdates, logOut, loading, platform, setPlatform,
     username, setUsername, password, setPassword
 }) {
 
     const [isModalOpen, setModal] = useState(false)
+    const [agent, setAgent] = useState(null)
 
     useEffect(()=>{
-
         const savedPlatform = localStorage.getItem('preferredPlatform')
 
         if (savedPlatform) {
@@ -17,8 +18,38 @@ function UserInfo({userData, animeRes, mangaRes, setBlurAdult, blurAdult, isMobi
         } else{
             setPlatform('x')
         }
-
     },[setPlatform])
+
+    useEffect(() => {
+        const newAgent = new AtpAgent({
+            service: 'https://bsky.social',
+            persistSession: (evt, sess) => {
+                if (evt === 'update' && sess) {
+                // Store session in localStorage when updated
+                localStorage.setItem('bskySession', JSON.stringify(sess));
+                }
+            }
+        })
+      
+        setAgent(newAgent)
+      
+        // Try to resume the session if it was saved
+        const savedSession = localStorage.getItem('bskySession');
+        if (savedSession) {
+          const sessionData = JSON.parse(savedSession);
+          newAgent
+            .resumeSession(sessionData)
+            .then(() => {
+              setSession(sessionData);
+              setAuthenticated(true);
+              console.log('Session resumed');
+            })
+            .catch((err) => {
+              console.error('Failed to resume session:', err);
+              localStorage.removeItem('bskySession');
+            });
+        }
+      }, []);
 
     const handlePlatformChange = (value) =>{
         const newPlatform = value === platform ? null : value
