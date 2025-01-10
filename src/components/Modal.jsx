@@ -169,7 +169,6 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates, platform, authenti
         facets,
         createdAt: new Date().toISOString(),
       })
-      alert('Post successful')
     } catch (error) {
       console.log(agent.session)
       console.error('error creating post:', error)
