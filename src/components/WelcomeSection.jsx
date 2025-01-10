@@ -9,7 +9,7 @@ const WelcomeSection = () => {
           <img className="rounded-lg w-40 mb-4" src={chika} alt="gif of mayuri from steins;gate" />
           <p className="leading-relaxed text-lg md:text-3xl mb-12 font-Roboto text-center text-neutral-200 select-none">
             Link your AniList account to Toukou to effortlessly update your anime and manga progress.
-            <br/><br/> Share your updates directly to Twitter/X and keep your friends in the loop!
+            <br/><br/> Share your updates directly to Twitter/X and now Bluesky to keep your friends in the loop!
           </p>
 
           <a href='https://anilist.co/api/v2/oauth/authorize?client_id=20510&response_type=token'>
