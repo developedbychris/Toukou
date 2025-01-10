@@ -67,10 +67,16 @@ function PlatformModal({platform, handlePlatformChange, isMobile, closeModal, us
                         <h2 className="font-Roboto font-bold text-xl md:text-2xl text-center">Sign into Bluesky</h2>
                         <form className="mt-4 w-full" onSubmit={e => e.preventDefault()}>
                             <div className="flex flex-col justify-center w-96">
-                                <h2 className="mr-2">Bsky Handle</h2>
-                                <input type="text" placeholder="User.bsky.social" className="font-sans text-center rounded-sm mb-3 bg-neutral-200 text-black" onChange={(e)=> handleUsernameChange(e)}/> 
-                                <h2 className="mr-2">Password</h2>
-                                <input type="password" placeholder="Password" className="font-sans text-center rounded-sm bg-neutral-200 text-black" onChange={(e)=> handlePasswordChange(e)} onKeyDown={handleEnterKey}/> <br/>
+                                <div className="flex flex-col w-full">
+                                    <h2 className="mr-2 text-center">Bsky Handle</h2>
+                                    <input type="text" placeholder="User.bsky.social" className="font-sans text-center rounded-sm mb-3 bg-neutral-200 text-black w-4/5 md:w-full mx-auto" onChange={(e)=> handleUsernameChange(e)}/>
+                                </div>
+
+                                <div className="flex flex-col w-full">
+                                    <h2 className="mr-2 text-center">Password</h2>
+                                    <input type="password" placeholder="Password" className="font-sans text-center rounded-sm bg-neutral-200 text-black w-4/5 md:w-full mx-auto" onChange={(e)=> handlePasswordChange(e)} onKeyDown={handleEnterKey}/>
+                                </div>
+                                 <br/>
                                 {loginError ? <h6 className="text-center mb-2 text-xs md:text-sm font-Roboto font-light text-red-600 select-none">{loginError}</h6> : <h6 className="text-center mb-2 text-xs md:text-sm font-Roboto font-light text-gray-400 italic select-none">Toukou DOES NOT store any of your information.</h6>}
                                 <button className="bg-BlueskyBlue px-3 py-2 rounded-lg font-Mono text-lg md:text-xl text-neutral-200 hover:bg-green-500 duration-300" onClick={authenticate}>Log In</button>
                             </div>
