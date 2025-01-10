@@ -4,11 +4,13 @@ import PlatformModal from "./PlatformModal"
 import AtpAgent from "@atproto/api"
 
 function UserInfo({userData, animeRes, mangaRes, setBlurAdult, blurAdult, isMobile, fetchUpdates, logOut, loading, platform, setPlatform,
-    username, setUsername, password, setPassword
+    username, setUsername, password, setPassword, authenticated, setAuthenticated, agent, setAgent
 }) {
 
     const [isModalOpen, setModal] = useState(false)
-    const [agent, setAgent] = useState(null)
+    
+    const [handle, setHandle] = useState(null)
+    const [_, setSession] = useState(null)
 
     useEffect(()=>{
         const savedPlatform = localStorage.getItem('preferredPlatform')
@@ -16,7 +18,7 @@ function UserInfo({userData, animeRes, mangaRes, setBlurAdult, blurAdult, isMobi
         if (savedPlatform) {
             setPlatform(savedPlatform)
         } else{
-            setPlatform('x')
+            setPlatform('X / Twitter')
         }
     },[setPlatform])
 
@@ -36,20 +38,21 @@ function UserInfo({userData, animeRes, mangaRes, setBlurAdult, blurAdult, isMobi
         // Try to resume the session if it was saved
         const savedSession = localStorage.getItem('bskySession');
         if (savedSession) {
-          const sessionData = JSON.parse(savedSession);
+          const sessionData = JSON.parse(savedSession)
           newAgent
             .resumeSession(sessionData)
             .then(() => {
-              setSession(sessionData);
-              setAuthenticated(true);
-              console.log('Session resumed');
+              setSession(sessionData)
+              setHandle(sessionData.handle)
+              setAuthenticated(true)
+              console.log('Session resumed')
             })
             .catch((err) => {
-              console.error('Failed to resume session:', err);
-              localStorage.removeItem('bskySession');
-            });
+              console.error('Failed to resume session:', err)
+              localStorage.removeItem('bskySession')
+            })
         }
-      }, []);
+      }, [])
 
     const handlePlatformChange = (value) =>{
         const newPlatform = value === platform ? null : value
@@ -78,7 +81,10 @@ function UserInfo({userData, animeRes, mangaRes, setBlurAdult, blurAdult, isMobi
                     <h6 className="font-Roboto text-xs md:text-lg mr-1 font-bold">Blur 18+ Covers</h6>
                     <input className="h-2 md:h-3 outline-none border-none" disabled={!animeRes && !mangaRes} type="checkbox" onChange={()=> setBlurAdult(!blurAdult) }/>
                 </div>
-                <h5 className="font-Roboto text-xs md:text-lg mr-1 font-bold border-b border-AniListBlue hover:text-AniListBlue hover:cursor-pointer duration-200" onClick={()=> setModal(true)}>Select a Platform </h5>
+                <h5 className="font-Roboto text-xs md:text-lg mr-1">Using <span className="font-bold text-AniListBlue">{platform}</span></h5>
+                {platform === 'Bluesky' && authenticated && (<h5 className="font-Roboto text-xs md:text-base mr-1">Signed In ✅</h5>)}
+                {platform === 'Bluesky' && !authenticated && (<h5 className="font-Roboto text-xs md:text-base mr-1">⚠️Not Signed In</h5>)}
+                <h5 className="font-Roboto text-xs md:text-lg mr-1 font-bold border-b border-AniListBlue hover:text-AniListBlue hover:cursor-pointer duration-200" onClick={()=> setModal(true)}>Manage Platforms</h5>
             </div>
         </div>
 
@@ -88,7 +94,8 @@ function UserInfo({userData, animeRes, mangaRes, setBlurAdult, blurAdult, isMobi
         
     </div>
     {isModalOpen && (<PlatformModal platform={platform} handlePlatformChange={handlePlatformChange} isMobile={isMobile} closeModal={()=>setModal(false)} 
-        username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>)}
+        username={username} setUsername={setUsername} password={password} setPassword={setPassword} authenticated={authenticated} setAuthenticated={setAuthenticated}
+        handle={handle} setHandle={setHandle} setSession={setSession} agent={agent}/>)}
     </>
   )
 }

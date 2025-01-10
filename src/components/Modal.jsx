@@ -7,7 +7,7 @@ import { RiCloseCircleFill } from "react-icons/ri";
 import { url } from "../App";
 const modalCSS = "w-full h-full top-0 left-0 fixed"
 
-const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
+const Modal = ({ modalMedia, closeModal, token, fetchUpdates, platform, authenticated, agent,}) => {
   const isMobile = useMediaQuery('(max-width: 640px)')
   const isTablet = useMediaQuery('(max-width: 1023px)')
   const isTabletAndMobile = useMediaQuery('(max-width: 767px)')
@@ -83,6 +83,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
     const title = modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji;
     const mediaUrl = modalMedia.media.siteUrl;
     const userStatus = getModalStatusLabel(modalMedia.status, modalMedia.media.format)
+    const viaTag = platform === 'Bluesky' ? '[via @Toukou.co]' : '[via @ToukouApp]'
     let action
     // FOR COMPLETION CONDITIONAL
     switch (userStatus) {
@@ -103,25 +104,85 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
     }
     if (updatedProgress === maxProgress) {
       // completed reading/watching
-      setActivity(`I finished ${action} ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
+      setActivity(`I finished ${action} ${title}\n\n${viaTag}\n${mediaUrl && platform === 'X / Twitter' ? mediaUrl : ''}`)
     } else if (updatedProgress > originalProgress) {
       // if updating progress to a higher value, show range only if increment is greater than 1
       if (originalProgress < updatedProgress - 1) {
-        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()}s ${originalProgress + 1} - ${updatedProgress} of ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
+        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()}s ${originalProgress + 1} - ${updatedProgress} of ${title}\n\n${viaTag}\n${mediaUrl && platform === 'X / Twitter' ? mediaUrl : ''}`)
       } else {
         // otherwise, show a single progress entry
-        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
+        setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\n\n${viaTag}\n${mediaUrl && platform === 'X / Twitter' ? mediaUrl : ''}`)
       }
     } else if (updatedProgress < originalProgress){
       // For reverse entries
-      setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\n\n[via @ToukouApp]\n${mediaUrl}`)
+      setActivity(`I ${userStatus} ${formatLabel.toLowerCase()} ${updatedProgress} of ${title}\n\n${viaTag}\n${mediaUrl && platform === 'X / Twitter' ? mediaUrl : ''}`)
     }
   }
 
   const progressChanged = newProgress !== originalProgress
+  const createBlueskyPost = async () =>{
+    const mediaTitle = modalMedia?.media?.title?.english || modalMedia?.media?.title?.romaji
+    try {
+      const facets = [] // array for adding rich-text links
+      const mediaTitleIndex = activity.indexOf(mediaTitle)
+      // ADDS HYPERLINK TO MEDIA URL
+      if (mediaTitleIndex !== -1) {
+        // create facet for hyperlinking the mediaTitle
+        const beforeUrl = activity.slice(0, mediaTitleIndex)
+        const byteStart = new TextEncoder().encode(beforeUrl).length
+        const byteEnd = byteStart + new TextEncoder().encode(mediaTitle).length
+        facets.push({
+          index: {
+            byteStart,
+            byteEnd,
+          },
+          features: [
+            {
+              $type: "app.bsky.richtext.facet#link",
+              uri: modalMedia.media.siteUrl,
+            },
+          ],
+        })
+      }
+      const viaTagIndex = activity.indexOf('@Toukou.co')
+      // ADDS HYPERLINK TO BLUESKY PROFILE
+      if(viaTagIndex !== -1){
+        const beforeViaTag = activity.slice(0, viaTagIndex)
+        const byteStart = new TextEncoder().encode(beforeViaTag).length
+        const byteEnd = byteStart + new TextEncoder().encode('@Toukou.co').length
+        facets.push({
+          index: {
+            byteStart,
+            byteEnd,
+          },
+          features: [
+            {
+              $type: "app.bsky.richtext.facet#link",
+              uri: 'https://bsky.app/profile/toukou.co',
+            },
+          ],
+        })
+      }
+      
+      await agent.post({
+        text: activity,
+        facets,
+        createdAt: new Date().toISOString(),
+      })
+      alert('Post successful')
+    } catch (error) {
+      console.log(agent.session)
+      console.error('error creating post:', error)
+    }
+  }
   const handleUpdateAndPost = () =>{
-    handleMediaUpdate()
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`)
+    if(platform === 'Bluesky'){
+      handleMediaUpdate()
+      createBlueskyPost()
+    } else{
+      handleMediaUpdate()
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(activity)}`)
+    }
   }
   useEffect(()=>{
     document.body.classList.add('no-scroll')
@@ -223,6 +284,7 @@ const Modal = ({ modalMedia, closeModal, token, fetchUpdates }) => {
                   <a onClick={handleUpdateAndPost}>
                     <button 
                       className="bg-green-600 hover:bg-green-700 mb-2 md:mb-0 text-white px-3 py-2 rounded-md duration-300 mr-2"
+                      disabled={platform === 'Bluesky' && !authenticated}
                     >
                       Update and Post
                     </button>

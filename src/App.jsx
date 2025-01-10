@@ -31,9 +31,10 @@ function App() {
   const [userID, setUserID] = useState(null)
   const [blurAdult, setBlurAdult] = useState(false)
 
-  const [platform, setPlatform] = useState('x')
+  const [platform, setPlatform] = useState('X / Twitter')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [agent, setAgent] = useState(null)
   const [authenticated, setAuthenticated] =  useState(false)
   const isMobile = useMediaQuery('(max-width: 767px)')
   // FOR THE LOGOUT BUTTON
@@ -228,7 +229,9 @@ function App() {
         <UserInfo userData={userData} animeRes={animeRes} mangaRes={mangaRes} setBlurAdult={setBlurAdult}
         blurAdult={blurAdult} isMobile={isMobile} fetchUpdates={fetchUpdates} logOut={logOut} loading={loading}
         platform={platform} setPlatform={setPlatform} username={username} setUsername={setUsername}
-        password={password} setPassword={setPassword}/>
+        password={password} setPassword={setPassword} authenticated={authenticated} setAuthenticated={setAuthenticated}
+        agent={agent} setAgent={setAgent}
+        />
       )}
       
       {/* ERROR MESSAGE */}
@@ -257,9 +260,9 @@ function App() {
             <TransitionGroup>
               <CSSTransition key={tab} timeout={300} classNames={'fade'} unmountOnExit>
                 {tab === 'anime' ? 
-                  (<AnimeEntries animeRes={animeRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>)
+                  (<AnimeEntries animeRes={animeRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates} platform={platform} authenticated={authenticated} agent={agent}/>)
                   :
-                  (<MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates}/>)
+                  (<MangaEntries mangaRes={mangaRes} blurAdult={blurAdult} token={token} fetchUpdates={fetchUpdates} platform={platform} authenticated={authenticated} agent={agent}/>)
                 }
               </CSSTransition>
             </TransitionGroup>

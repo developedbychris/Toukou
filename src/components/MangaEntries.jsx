@@ -4,7 +4,7 @@ import { getStatusLabel, handleTitles, getMediaStatuslabel} from "../helpers"
 import Modal from "./Modal"
 import { borderStyles } from "../App"
 import useMediaQuery from "../hooks/useMediaQuery"
-const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates}) => {
+const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates, platform, authenticated, agent}) => {
     const [isModalOpen, setModal] = useState(false)
     const [modalMedia, setModalMedia] = useState(null)
     const isMobile = useMediaQuery('(max-width: 767px)')
@@ -64,7 +64,8 @@ const MangaEntries = ({mangaRes, blurAdult, token, fetchUpdates}) => {
             ))
             }
 
-            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)} token={token} fetchUpdates={fetchUpdates}/>}
+            {isModalOpen && <Modal modalMedia={modalMedia} closeModal={()=> setModal(false)} token={token} fetchUpdates={fetchUpdates}
+            platform={platform} authenticated={authenticated} agent={agent}/>}
         </>
     )
 }
