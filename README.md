@@ -11,7 +11,7 @@ Toukou is a front-end web application that integrates with AniList to track anim
 - **Track Anime and Manga:** View and manage your anime and manga lists from AniList.
 - **Dynamic UI:** Switch between anime and manga tabs with smooth transitions.
 - **Responsive Design:** Optimized for both desktop and mobile devices.
-- **Twitter Integration:** Tweet updates about your progress directly from the app.
+- **Twitter & Bluesky Integration:** Tweet and/or post updates about your progress directly from the app.
 
 
 
