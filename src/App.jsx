@@ -150,7 +150,7 @@ function App() {
         setUserData(viewer)
       } else {
         console.error('Viewer not found:', data)
-        setError('Failed to load user data — check your AniList token.')
+        setError('Failed to load user data — please refresh or login again 🙂')
         setUserID(null)
         setUserData(null)
         localStorage.removeItem('access_token') // optional reset
