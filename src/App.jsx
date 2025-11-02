@@ -142,13 +142,25 @@ function App() {
     if (token) {
       setLoading(true)
       fetch(url, options)
-        .then(data => data.json())
-        .then(data =>{
-          setUserID(data.data.Viewer.id)
-          setUserData(data.data.Viewer)
-        })
-        .catch(e => setError(e.message))
-        .finally(()=> setLoading(false))
+      .then(res => res.json())
+      .then(data => {
+      const viewer = data?.data?.Viewer
+      if (viewer) {
+        setUserID(viewer.id)
+        setUserData(viewer)
+      } else {
+        console.error('Viewer not found:', data)
+        setError('Failed to load user data — check your AniList token.')
+        setUserID(null)
+        setUserData(null)
+        localStorage.removeItem('access_token') // optional reset
+      }
+  })
+  .catch(e => {
+    console.error('Viewer fetch failed:', e)
+    setError(e.message)
+  })
+  .finally(() => setLoading(false))
     }
   }, [token])
 
